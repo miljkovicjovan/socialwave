@@ -1,4 +1,9 @@
+import { Box } from "@mui/material";
+import Nav from "scenes/nav";
+
 const Home = () => {
-    return <div>home</div>;
+    return <Box>
+        <Nav/>
+    </Box>;
 }
 export default Home;
