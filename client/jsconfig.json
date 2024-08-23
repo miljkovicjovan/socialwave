@@ -1,0 +1,8 @@
+// simplify imports using "src" as the base url
+
+{
+    "compilerOptions": {
+        "baseUrl": "src"
+    },
+    "include": ["src"]
+}
