@@ -1,10 +1,16 @@
 import { useState } from "react";
 import { 
-    Box, IconButton, InputBase, Typography, Select, MenuItem, FormControl, useTheme, useMediaQuery
+    Box,
+    IconButton,
+    InputBase,
+    Typography,
+    Select,
+    MenuItem,
+    FormControl,
+    useTheme,
+    useMediaQuery
 } from "@mui/material";
-import {
-    Search, Message, LightMode, DarkMode, Notifications, Help, Menu, Close, Waves
-} from "@mui/icons-material";
+import { LightMode, DarkMode, Menu, Close, Waves } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import { setMode, setLogout } from "state";
 import { useNavigate } from "react-router-dom";
@@ -23,8 +29,6 @@ const Nav = () => {
     const neutralLight = theme.palette.neutral.light;
     const dark = theme.palette.neutral.dark;
     const background = theme.palette.background.default;
-    const primaryLight = theme.palette.primary.light;
-    const alt = theme.palette.background.alt;
   
     const fullName = `${user.firstName} ${user.lastName}`;
   
