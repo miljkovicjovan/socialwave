@@ -33,8 +33,8 @@ app.use(bodyParser.urlencoded({ limit: "30mb", extended: true}));
 app.use(cors()); // Cross Origin Resource Sharing
 
 // routes with file uploads
-app.post("/auth/register", upload.single("picture"), register);
-app.post("/posts", verifyToken, upload.single("picture"), createPost);
+app.post("/auth/register", register);
+//app.post("/posts", verifyToken, upload.single("picture"), createPost);
 
 // routes
 app.use("/auth", authRoutes);

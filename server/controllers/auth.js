@@ -12,9 +12,15 @@ export const register = async (req, res) => {
         }
 
         // Check if user with that email already exists
-        const existingUser = await User.findOne({ email });
-        if (existingUser) {
+        const existingEmail = await User.findOne({ email });
+        if (existingEmail) {
             return res.status(400).json({ error: "User already exists with this email" });
+        }
+
+        // Check if user with that username already exists
+        const existingUsername = await User.findOne({ username });
+        if (existingUsername) {
+            return res.status(400).json({ error: "User already exists with this username" });
         }
 
         // Generating a salt and hashing password

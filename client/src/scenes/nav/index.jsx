@@ -20,9 +20,9 @@ const Nav = () => {
     const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    //const user = useSelector((state) => state.user);
+    const user = useSelector((state) => state.user);
     // for testing purpose uncomment the bellow and comment the above
-    const user = "1";
+    //const user = "1";
     const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
   
     const theme = useTheme();
