@@ -29,9 +29,7 @@ const Nav = () => {
     const neutralLight = theme.palette.neutral.light;
     const dark = theme.palette.neutral.dark;
     const background = theme.palette.background.default;
-  
-    const fullName = `${user.firstName} ${user.lastName}`;
-  
+
     return (
         <FlexBetween padding="1rem 6%">
             <FlexBetween gap="1.75rem">
@@ -51,12 +49,11 @@ const Nav = () => {
             {/* DESKTOP NAV */}
             {isNonMobileScreens ? (
                 <FlexBetween gap="2rem">
-                    <FormControl variant="standard" value={fullName}>
+                    <FormControl variant="standard" value={user.username}>
                         <Select
-                            value={fullName}
+                            value={user.username}
                             sx={{
                                 backgroundColor: neutralLight,
-                                width: "150px",
                                 borderRadius: "0.25rem",
                                 p: "0.25rem 1rem",
                                 "& .MuiSvgIcon-root": {
@@ -69,9 +66,9 @@ const Nav = () => {
                             }}
                             input={<InputBase />}
                         >
-                            <MenuItem value={fullName}>
+                            <MenuItem value={user.username}>
                                 {/* TODO implement link to profile page */}
-                                <Typography>{fullName}</Typography>
+                                <Typography>{user.username}</Typography>
                             </MenuItem>
                             <MenuItem onClick={() => dispatch(setLogout())}>Log Out</MenuItem>
                         </Select>
@@ -123,9 +120,9 @@ const Nav = () => {
                                 ( <LightMode sx={{ color: dark, fontSize: "25px" }} />)
                             }
                         </IconButton>
-                        <FormControl variant="standard" value={fullName}>
+                        <FormControl variant="standard" value={user.username}>
                             <Select
-                            value={fullName}
+                            value={user.username}
                             sx={{
                             backgroundColor: neutralLight,
                             width: "150px",
@@ -142,8 +139,8 @@ const Nav = () => {
                             input={<InputBase />}
                             >
                                 {/* TODO implement link to profile page */}
-                                <MenuItem value={fullName}>
-                                    <Typography>{fullName}</Typography>
+                                <MenuItem value={user.username}>
+                                    <Typography>{user.username}</Typography>
                                 </MenuItem>
                                 <MenuItem onClick={() => dispatch(setLogout())}>
                                     Log Out
