@@ -66,8 +66,10 @@ const Nav = () => {
                             }}
                             input={<InputBase />}
                         >
-                            <MenuItem value={user.username}>
-                                {/* TODO implement link to profile page */}
+                            <MenuItem 
+                                value={user.username}
+                                onClick={() => navigate("/profile/"+user.username)}
+                            >
                                 <Typography>{user.username}</Typography>
                             </MenuItem>
                             <MenuItem onClick={() => dispatch(setLogout())}>Log Out</MenuItem>
@@ -138,11 +140,15 @@ const Nav = () => {
                             }}
                             input={<InputBase />}
                             >
-                                {/* TODO implement link to profile page */}
-                                <MenuItem value={user.username}>
+                                <MenuItem 
+                                    value={user.username}
+                                    onClick={() => navigate("/profile/"+user.username)}
+                                >
                                     <Typography>{user.username}</Typography>
                                 </MenuItem>
-                                <MenuItem onClick={() => dispatch(setLogout())}>
+                                <MenuItem onClick={() => {
+                                    dispatch(setLogout());
+                                }}>
                                     Log Out
                                 </MenuItem>
                             </Select>
