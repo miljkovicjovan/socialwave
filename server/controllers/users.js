@@ -4,9 +4,8 @@ import User from "../models/User.js";
 // Get a user
 export const getUser = async (req, res) => {
     try {
-        const { id } = req.params;
-
-        const user = await User.findById(id);
+        const { username } = req.params;
+        const user = await User.findOne({username:username});
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }

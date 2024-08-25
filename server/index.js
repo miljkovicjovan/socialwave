@@ -19,6 +19,12 @@ import { register } from "./controllers/auth.js";
 import { createPost } from "./controllers/posts.js";
 import { verifyToken } from "./middleware/auth.js";
 
+// setup for files
+import path from "path";
+import { fileURLToPath } from "url";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 // Load environment variables
 dotenv.config();
 
@@ -31,6 +37,9 @@ app.use(morgan("common")); // Log HTTP requests
 app.use(bodyParser.json({ limit: "30mb", extended: true})); // Size limit 30MB
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true}));
 app.use(cors()); // Cross Origin Resource Sharing
+
+// Serve static files from the "assets" directory
+app.use('/assets', express.static(path.join(__dirname, 'assets')));
 
 // routes with file uploads
 app.post("/auth/register", register);
