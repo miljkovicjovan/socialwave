@@ -40,7 +40,6 @@ const initialValuesLogin = {
 };
 
 const Form = ({ isLogin, setIsLogin }) => {
-    const [pageType, setPageType] = useState("login");
     const [error, setError] = useState(null);
     const { palette } = useTheme();
     const dispatch = useDispatch();
@@ -66,7 +65,7 @@ const Form = ({ isLogin, setIsLogin }) => {
             onSubmitProps.resetForm();
     
             if (savedUser) {
-                setIsLogin(true);
+                await login(values, onSubmitProps);
             }
         } catch (error) {
             console.error("Registration error:", error);
