@@ -5,6 +5,7 @@ import UserImage from "components/UserImage";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
+import PostsWidget from "scenes/widgets/PostsWidget";
 
 const Profile = () => {
 
@@ -22,7 +23,7 @@ const Profile = () => {
         const data = await response.json();
         setUser(data);
     };
-    
+
     useEffect(() => {
         getUser();
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -66,6 +67,7 @@ const Profile = () => {
                     </Box>
                 </Box>
             </Box>
+            <PostsWidget userId={user._id} isProfile />
         </Box>
     );
 }

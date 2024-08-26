@@ -10,9 +10,7 @@ const Home = () => {
     return (
         <Box>
             <Nav/>
-            <Box sx={{width:"25%", margin:"1rem auto"}}>
-                <PostsWidget userId={_id}/>
-            </Box>
+            <PostsWidget userId={_id}/>
             <MakePost/>
         </Box>
     );

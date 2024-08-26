@@ -30,7 +30,9 @@ const MakePost = () => {
 
             console.log("hh")
             if (response.ok) {
+                const newPost = await response.json();
                 console.log('Post created successfully');
+                user.posts = [...user.posts, newPost];
             } else {
                 console.log(response);
             }

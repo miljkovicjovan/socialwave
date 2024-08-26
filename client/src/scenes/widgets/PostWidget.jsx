@@ -50,7 +50,7 @@ const PostWidget = ({
                         >
                             {name}
                         </Typography>
-                        <Typography color="gray">{formatDistanceToNow(new Date(timestamp), { addSuffix: true }).substring(6)}</Typography>
+                        <Typography color="gray">{formatDistanceToNow(new Date(timestamp), { addSuffix: true })}</Typography>
                     </Box>
                 </Box>
                 <IconButton
