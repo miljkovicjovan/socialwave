@@ -6,17 +6,11 @@ const PostSchema = new mongoose.Schema(
         userId: {
             type: String,
         },
-        firstName: {
+        username: {
             type: String,
             required: true,
-            minlength: 2,
-            maxlength: 50,
-        },
-        lastName: {
-            type: String,
-            required: true,
-            minlength: 2,
-            maxlength: 50,
+            minlength: 4,
+            maxlength: 15,
         },
         profilePic: {
             type: String,
@@ -35,7 +29,7 @@ const PostSchema = new mongoose.Schema(
             type: [CommentSchema],
             default: [],
         },
-    }
+    },{timestamps: true}
 );
 
 const Post = mongoose.model("Post", PostSchema);
