@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 
-const UserImage = ({ image, size = "60px" }) => {
+const UserImage = ({ image = "default.jpg", size = "60px", onClick}) => {
   return (
     <Box width={size} height={size}>
       <img
@@ -8,8 +8,8 @@ const UserImage = ({ image, size = "60px" }) => {
         width={size}
         height={size}
         alt="user profile"
-        /* src={`http://localhost:3001/assets/${image}`} */
-        src="http://localhost:3001/assets/default.jpg"
+        src={`http://localhost:3001/assets/${image}`}
+        onClick={onClick}
       />
     </Box>
   );
