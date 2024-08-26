@@ -16,8 +16,6 @@ import postRoutes from "./routes/posts.js";
 
 // functions
 import { register } from "./controllers/auth.js";
-import { createPost } from "./controllers/posts.js";
-import { verifyToken } from "./middleware/auth.js";
 
 // setup for files
 import path from "path";
