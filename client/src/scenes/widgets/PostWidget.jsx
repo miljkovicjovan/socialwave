@@ -19,9 +19,13 @@ const PostWidget = ({
     likes
 }) => {
     const navigate = useNavigate();
+
+    const [open, setOpen] = useState(false);
+
     const { palette } = useTheme();
     const main = palette.neutral.main;
-    const [open, setOpen] = useState(false);
+
+    const likeCount = Object.keys(likes).length;
 
     const handleOptionsOpen = () => setOpen(true);
 
@@ -53,22 +57,20 @@ const PostWidget = ({
                         <Typography color="gray">{formatDistanceToNow(new Date(timestamp), { addSuffix: true })}</Typography>
                     </Box>
                 </Box>
-                <IconButton
-                    onClick={handleOptionsOpen}
-                >
+                <IconButton onClick={handleOptionsOpen}>
                     <MoreHorizIcon/>
                 </IconButton>
             </FlexBetween>
             <Typography color={main} sx={{mt:"1rem", ml:"0.5rem"}}>{description}</Typography>
 
             <Box margin="1rem 0 0.2rem 0" gap="0.1rem">
-                <Button color="error" sx={{minWidth:"0", borderRadius:"20px"}}>
+                <Button onClick={handleLike} color="error" sx={{minWidth:"0", borderRadius:"20px"}}>
                     <FavoriteBorderIcon/>
-                    <Typography pl="0.2rem">{likes}</Typography>
+                    <Typography pl="0.2rem">{likeCount}</Typography>
                 </Button>
                 <Button sx={{minWidth:"0", borderRadius:"20px"}}>
                     <ChatBubbleIcon/>
-                    <Typography pl="0.2rem">{likes}</Typography>
+                    <Typography pl="0.2rem">0</Typography>
                 </Button>
             </Box>
             
