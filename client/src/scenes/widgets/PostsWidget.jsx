@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPosts } from "state";
+
 import PostWidget from "./PostWidget";
 import { Box } from "@mui/material";
 
@@ -38,11 +39,14 @@ const PostsWidget = ({ userId, isProfile = false }) => {
         }
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+    console.log(posts)
+
     return (
         <Box sx={{width:"25%", margin:"1rem auto"}}>
             {posts.map(
                 ({
                     _id,
+                    userId,
                     createdAt,
                     profilePic,
                     username,
@@ -51,6 +55,8 @@ const PostsWidget = ({ userId, isProfile = false }) => {
                 }) => (
                     <PostWidget
                         key={_id}
+                        postId={_id}
+                        postUserId={userId}
                         timestamp={createdAt}
                         profilePic={profilePic}
                         name={username}

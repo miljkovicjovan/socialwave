@@ -1,33 +1,64 @@
-import { Typography, useTheme, Box } from "@mui/material";
-import { colorTokens } from "theme";
-import { formatDistanceToNow } from 'date-fns';
-import UserImage from "components/UserImage";
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import {IconButton, Button} from "@mui/material";
+import { setPost } from "state";
+import { colorTokens } from "theme";
+
+import { Typography, useTheme, Box, IconButton, Button } from "@mui/material";
+import { 
+    MoreHoriz,
+    FavoriteBorderOutlined,
+    FavoriteOutlined,
+    ChatBubble
+} from '@mui/icons-material';
+import { formatDistanceToNow } from 'date-fns';
+
+import UserImage from "components/UserImage";
 import FlexBetween from "components/FlexBetween";
-import { useState } from "react";
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 import PostOptionsModal from "components/PostOptionsModal";
 
 const PostWidget = ({
+    postId,
+    postUserId,
     timestamp,
     profilePic,
     name,
     description,
     likes
-}) => {
+}) => { 
+    const [optionsOpen, setOptionsOpen] = useState(false);
+    const handleOptionsOpen = () => setOptionsOpen(true);
+
     const navigate = useNavigate();
 
-    const [open, setOpen] = useState(false);
+    const dispatch = useDispatch();
+    const token = useSelector((state) => state.token);
+    const loggedInUserId = useSelector((state) => state.user);
+    const isLiked = Boolean(likes[loggedInUserId]);
+    const likeCount = Object.keys(likes).length;
 
     const { palette } = useTheme();
     const main = palette.neutral.main;
 
-    const likeCount = Object.keys(likes).length;
+    const handleLike = async () => {
+        try {
+            const id = postId;
+            const userId = user._id;
 
-    const handleOptionsOpen = () => setOpen(true);
+            const response = await fetch(`http://localhost:3001/posts/${id}/like`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({userId: loggedInUserId })
+            });
+            const updatedPost = await response.json();
+            dispatch(setPost({ post: updatedPost }));
+        } catch (err) {
+            console.error('Error:', err);
+        }
+    }
 
     return (
         <Box 
@@ -46,11 +77,7 @@ const PostWidget = ({
                             onClick={() => navigate(`/profile/${name}`)}
                             fontWeight="700" 
                             variant="h5"
-                            sx={{
-                                "&:hover": {
-                                    cursor: "pointer"
-                                },
-                            }}
+                            sx={{"&:hover": {cursor: "pointer"}}}
                         >
                             {name}
                         </Typography>
@@ -65,7 +92,7 @@ const PostWidget = ({
 
             <Box margin="1rem 0 0.2rem 0" gap="0.1rem">
                 <Button onClick={handleLike} color="error" sx={{minWidth:"0", borderRadius:"20px"}}>
-                    <FavoriteBorderIcon/>
+                    {isLiked ? (<FavoriteOutlined/>) : (<FavoriteBorderOutlined/>)}
                     <Typography pl="0.2rem">{likeCount}</Typography>
                 </Button>
                 <Button sx={{minWidth:"0", borderRadius:"20px"}}>
@@ -74,7 +101,7 @@ const PostWidget = ({
                 </Button>
             </Box>
             
-            <PostOptionsModal open={open} setOpen={setOpen}/>
+            <PostOptionsModal open={optionsOpen} setOpen={setOptionsOpen}/>
 
         </Box>
     );
