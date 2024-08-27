@@ -52,12 +52,15 @@ export const getUserPosts = async (req, res) => {
     }
 }
 
-/* ---- UPDATE ---- */
+/*  ---- UPDATE ---- */
 // Like/dislike a post
 export const likePost = async (req, res) => {
     try {
-        const { id } = req.params; // post id
-        const { userId } = req.params;
+        const { id, userId } = req.params;
+        if (!userId || !id) {
+            return res.status(400).json({ message: "Invalid parameters" });
+        }
+
         const post = await Post.findById(id);
 
         if (!post) {
