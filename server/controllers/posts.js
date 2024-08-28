@@ -56,7 +56,8 @@ export const getUserPosts = async (req, res) => {
 // Like/dislike a post
 export const likePost = async (req, res) => {
     try {
-        const { id, userId } = req.params;
+        const { id } = req.params;
+        const { userId } = req.body;
         if (!userId || !id) {
             return res.status(400).json({ message: "Invalid parameters" });
         }

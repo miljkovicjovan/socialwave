@@ -39,8 +39,8 @@ const PostWidget = ({
         try {
             const response = await fetch(`http://localhost:3001/posts/${postId}/like`, {
                 method: 'PATCH',
-                headers: {'Content-Type': 'application/json','Authorization': `Bearer ${token}`},
-                body: JSON.stringify({userId: loggedInUserId })
+                headers: {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`},
+                body: JSON.stringify({userId: loggedInUserId})
             });
             const updatedPost = await response.json();
             dispatch(setPost({ post: updatedPost }));
