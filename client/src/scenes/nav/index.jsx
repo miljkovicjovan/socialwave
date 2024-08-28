@@ -31,7 +31,14 @@ const Nav = () => {
     const background = theme.palette.background.default;
 
     return (
-        <FlexBetween padding="1rem 6%">
+        <FlexBetween 
+            padding="1rem 6%"
+            sx={{
+                position: "sticky",
+                top: 0,
+                zIndex: 1000
+            }}
+        >
             <FlexBetween gap="1.75rem">
                 <IconButton
                     color="white"
