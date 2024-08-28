@@ -1,16 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setPost } from "state";
 import { colorTokens } from "theme";
 
 import { Typography, useTheme, Box, IconButton, Button } from "@mui/material";
-import { 
-    MoreHoriz,
-    FavoriteBorderOutlined,
-    FavoriteOutlined,
-    ChatBubble
-} from '@mui/icons-material';
+import { MoreHoriz, FavoriteBorderOutlined, FavoriteOutlined, ChatBubble } from '@mui/icons-material';
 import { formatDistanceToNow } from 'date-fns';
 
 import UserImage from "components/UserImage";
@@ -33,7 +28,7 @@ const PostWidget = ({
 
     const dispatch = useDispatch();
     const token = useSelector((state) => state.token);
-    const loggedInUserId = useSelector((state) => state.user);
+    const loggedInUserId = useSelector((state) => state.user._id);
     const isLiked = Boolean(likes[loggedInUserId]);
     const likeCount = Object.keys(likes).length;
 
@@ -42,22 +37,14 @@ const PostWidget = ({
 
     const handleLike = async () => {
         try {
-            const id = postId;
-            const userId = user._id;
-
-            const response = await fetch(`http://localhost:3001/posts/${id}/like`, {
+            const response = await fetch(`http://localhost:3001/posts/${postId}/like`, {
                 method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
+                headers: {'Content-Type': 'application/json','Authorization': `Bearer ${token}`},
                 body: JSON.stringify({userId: loggedInUserId })
             });
             const updatedPost = await response.json();
             dispatch(setPost({ post: updatedPost }));
-        } catch (err) {
-            console.error('Error:', err);
-        }
+        } catch (err) {console.error('Error:', err);}
     }
 
     return (
@@ -81,28 +68,23 @@ const PostWidget = ({
                         >
                             {name}
                         </Typography>
-                        <Typography color="gray">{formatDistanceToNow(new Date(timestamp), { addSuffix: true })}</Typography>
+                        <Typography color="gray">{formatDistanceToNow(new Date(timestamp),{addSuffix:true})}</Typography>
                     </Box>
                 </Box>
-                <IconButton onClick={handleOptionsOpen}>
-                    <MoreHorizIcon/>
-                </IconButton>
+                <IconButton onClick={handleOptionsOpen}><MoreHoriz/></IconButton>
             </FlexBetween>
             <Typography color={main} sx={{mt:"1rem", ml:"0.5rem"}}>{description}</Typography>
-
             <Box margin="1rem 0 0.2rem 0" gap="0.1rem">
                 <Button onClick={handleLike} color="error" sx={{minWidth:"0", borderRadius:"20px"}}>
                     {isLiked ? (<FavoriteOutlined/>) : (<FavoriteBorderOutlined/>)}
                     <Typography pl="0.2rem">{likeCount}</Typography>
                 </Button>
                 <Button sx={{minWidth:"0", borderRadius:"20px"}}>
-                    <ChatBubbleIcon/>
+                    <ChatBubble/>
                     <Typography pl="0.2rem">0</Typography>
                 </Button>
             </Box>
-            
             <PostOptionsModal open={optionsOpen} setOpen={setOptionsOpen}/>
-
         </Box>
     );
   };

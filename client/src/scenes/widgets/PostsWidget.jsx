@@ -3,9 +3,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { setPosts } from "state";
 
 import PostWidget from "./PostWidget";
-import { Box } from "@mui/material";
+import { Box, useMediaQuery } from "@mui/material";
 
 const PostsWidget = ({ userId, isProfile = false }) => {
+    const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
     const dispatch = useDispatch();
     const posts = useSelector((state) => state.posts);
     const token = useSelector((state) => state.token);
@@ -39,10 +40,8 @@ const PostsWidget = ({ userId, isProfile = false }) => {
         }
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-    console.log(posts)
-
     return (
-        <Box sx={{width:"25%", margin:"1rem auto"}}>
+        <Box width={isNonMobileScreens ? "40%" : "93%"} sx={{margin:"1rem auto"}}>
             {posts.map(
                 ({
                     _id,
