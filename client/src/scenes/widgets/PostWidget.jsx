@@ -72,7 +72,7 @@ const PostWidget = ({
                         <Typography color="gray">{formatDistanceToNow(new Date(timestamp),{addSuffix:true})}</Typography>
                     </Box>
                 </Box>
-                <IconButton onClick={handleOptionsOpen}><MoreHoriz/></IconButton>
+                {postUserId === loggedInUserId &&(<IconButton onClick={handleOptionsOpen}><MoreHoriz/></IconButton>)}
             </FlexBetween>
             <Typography color={main} sx={{mt:"1rem", ml:"0.5rem"}}>{description}</Typography>
             {imagePath && (
@@ -94,7 +94,7 @@ const PostWidget = ({
                     <Typography pl="0.2rem">0</Typography>
                 </Button>
             </Box>
-            <PostOptionsModal open={optionsOpen} setOpen={setOptionsOpen}/>
+            {postUserId === loggedInUserId && (<PostOptionsModal postId={postId} open={optionsOpen} setOpen={setOptionsOpen}/>)}
         </Box>
     );
   };

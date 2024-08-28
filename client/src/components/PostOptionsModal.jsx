@@ -1,15 +1,37 @@
 import {Box, IconButton, Modal, Button} from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
+import { useSelector, useDispatch } from "react-redux";
+import { deletePost } from "state";
 
 const PostOptionsModal = ({
+    postId,
     open, 
     setOpen
 }) => {
+    const dispatch = useDispatch();
+    const token = useSelector((state) => state.token);
 
     const handleOptionsClose = () => setOpen(false);
     
     const handleEdit = () => console.log("editing");
-    const handleDelete = () => console.log("deleting");
+    const handleDelete = async () => {
+        try {
+            const response = await fetch(`http://localhost:3001/posts/${postId}/delete`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
+
+            if (response.ok) {
+                dispatch(deletePost({postId: postId})); 
+            } else {
+                console.error('Failed to delete the post');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
 
     return (
         <Modal 
