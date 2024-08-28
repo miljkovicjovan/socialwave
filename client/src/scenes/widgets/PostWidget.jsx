@@ -35,6 +35,7 @@ const PostWidget = ({
 
     const { palette } = useTheme();
     const main = palette.neutral.main;
+    const neutralLight = palette.neutral.light;
 
     const handleLike = async () => {
         try {
@@ -50,8 +51,8 @@ const PostWidget = ({
 
     return (
         <Box 
-            padding="0.6rem 1rem 0rem 1rem" 
-            sx={{border:"1px solid gray", backgroundColor:colorTokens.grey[800]}}
+            padding="0.6rem 1rem 0rem 1rem"
+            sx={{border:"1px solid gray", backgroundColor:neutralLight}}
         >
             <FlexBetween >
                 <Box display="flex" flexDirection="row">
