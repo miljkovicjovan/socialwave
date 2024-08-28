@@ -4,5 +4,8 @@
   },
   "scripts": {
     "start": "concurrently \"npm run dev --prefix server\" \"npm run start --prefix client\""
+  },
+  "dependencies": {
+    "uuid": "^10.0.0"
   }
 }

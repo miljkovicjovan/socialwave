@@ -81,7 +81,7 @@ const PostWidget = ({
                     height="auto"
                     alt="post"
                     style={{ borderRadius: "0.75rem", marginTop: "0.75rem" }}
-                    src={`http://localhost:3001/assets/${imagePath}`}
+                    src={`http://localhost:3001/uploads/${imagePath}`}
                 />
             )}
             <Box margin="1rem 0 0.2rem 0" gap="0.1rem">

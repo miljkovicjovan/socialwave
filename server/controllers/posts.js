@@ -5,19 +5,21 @@ import User from "../models/User.js";
 // Creating a post
 export const createPost = async (req, res) => {
     try {
-        const { userId, description, imagePath } = req.body;
+        const { userId, description } = req.body;
 
         const user = await User.findById(userId);
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
 
+        const savedFilename = req.savedFilename;
+
         const newPost = new Post ({
             userId,
             username: user.username,
             profilePic: user.profilePic,
             description,
-            imagePath,
+            imagePath: savedFilename,
             likes: {},
             comments: [],
         })

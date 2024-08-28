@@ -20,14 +20,28 @@ import { verifyToken } from "./middleware/auth.js";
 
 // setup for files
 import multer from "multer";
+import { v4 as uuidv4 } from 'uuid';
 import path from "path";
 import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 import { createPost } from "./controllers/posts.js";
 
-const upload = multer({ dest: 'assets/' });
-
+// Set up storage engine
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/');
+    },
+    filename: (req, file, cb) => {
+        const uniqueSuffix = `${uuidv4()}-${Date.now()}`;
+        const extension = path.extname(file.originalname);
+        const uniqueFilename = file.fieldname + '-' + uniqueSuffix + extension;
+        cb(null, uniqueFilename);
+        // Store the filename in req object so you can access it in the route
+        req.savedFilename = uniqueFilename;
+    }
+});
+const upload = multer({ storage });
 
 // Load environment variables
 dotenv.config();
@@ -44,6 +58,7 @@ app.use(cors()); // Cross Origin Resource Sharing
 
 // Serve static files from the "assets" directory
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // routes with file uploads
 app.post("/auth/register", register);
