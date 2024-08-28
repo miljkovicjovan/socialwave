@@ -19,6 +19,7 @@ const PostWidget = ({
     profilePic,
     name,
     description,
+    imagePath,
     likes
 }) => { 
     const [optionsOpen, setOptionsOpen] = useState(false);
@@ -74,6 +75,15 @@ const PostWidget = ({
                 <IconButton onClick={handleOptionsOpen}><MoreHoriz/></IconButton>
             </FlexBetween>
             <Typography color={main} sx={{mt:"1rem", ml:"0.5rem"}}>{description}</Typography>
+            {imagePath && (
+                <img
+                    width="100%"
+                    height="auto"
+                    alt="post"
+                    style={{ borderRadius: "0.75rem", marginTop: "0.75rem" }}
+                    src={`http://localhost:3001/assets/${imagePath}`}
+                />
+            )}
             <Box margin="1rem 0 0.2rem 0" gap="0.1rem">
                 <Button onClick={handleLike} color="error" sx={{minWidth:"0", borderRadius:"20px"}}>
                     {isLiked ? (<FavoriteOutlined/>) : (<FavoriteBorderOutlined/>)}

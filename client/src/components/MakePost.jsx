@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { Box, IconButton } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 import PostModal from './PostModal';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from "react-redux";
+import { setPosts } from "state";
 
 const MakePost = () => {
+    const dispatch = useDispatch();
     const [open, setOpen] = useState(false);
 
     const handleOpen = () => setOpen(true);
@@ -13,25 +15,20 @@ const MakePost = () => {
     const user = useSelector((state) => state.user);
     const token = useSelector((state) => state.token);
 
-    const createPost = async (description) => {
+    const createPost = async (formData) => {
         try {
-            const userId = user._id;
+            formData.append("userId", user._id);
             const response = await fetch('http://localhost:3001/posts', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify({
-                    userId,
-                    description
-                }),
+                body: formData
             });
 
             if (response.ok) {
-                const newPost = await response.json();
-                console.log('Post created successfully');
-                user.posts = [...user.posts, newPost];
+                const posts = await response.json();
+                dispatch(setPosts({ posts }));
             } else {
                 console.log(response);
             }

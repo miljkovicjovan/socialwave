@@ -16,12 +16,18 @@ import postRoutes from "./routes/posts.js";
 
 // functions
 import { register } from "./controllers/auth.js";
+import { verifyToken } from "./middleware/auth.js";
 
 // setup for files
+import multer from "multer";
 import path from "path";
 import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+import { createPost } from "./controllers/posts.js";
+
+const upload = multer({ dest: 'assets/' });
+
 
 // Load environment variables
 dotenv.config();
@@ -41,7 +47,7 @@ app.use('/assets', express.static(path.join(__dirname, 'assets')));
 
 // routes with file uploads
 app.post("/auth/register", register);
-//app.post("/posts", verifyToken, upload.single("picture"), createPost);
+app.post("/posts", verifyToken, upload.single("image"), createPost);
 
 // routes
 app.use("/auth", authRoutes);

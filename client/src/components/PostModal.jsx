@@ -1,18 +1,43 @@
 import React, { useState } from 'react';
 import { Box, IconButton, Modal, Typography, TextField, Button } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
+import { useDropzone } from 'react-dropzone';
 
 const PostModal = ({ open, handleClose, createPost }) => {
     const [description, setDescription] = useState("");
+    const [image, setImage] = useState(null);
 
     const handleSubmit = async () => {
-        // Call the createPost function passed down as a prop
-        await createPost(description);
-        // Clear the text field
+        const formData = new FormData();
+        formData.append('description', description);
+        if (image) {
+            formData.append('image', image);
+            formData.append('imagePath', image.name);
+        }
+
+        await createPost(formData);
+        // Clear the states
         setDescription("");
-        // Close the modal
+        setImage(null);
         handleClose();
     };
+
+    const onDrop = (acceptedFiles) => {
+        // Only allow one image, replace any existing image
+        if (acceptedFiles.length > 0) {
+            setImage(acceptedFiles[0]);
+        }
+    };
+
+    const { getRootProps, getInputProps } = useDropzone({
+        accept: {
+            'image/png': ['.png'],
+            'image/jpg': ['.jpg'],
+            'image/jpeg': ['.jpeg'],
+        },
+        onDrop,
+        maxFiles: 1, // Limit to one file
+    });
 
     return (
         <Modal
@@ -44,8 +69,8 @@ const PostModal = ({ open, handleClose, createPost }) => {
                 >
                     <CloseIcon />
                 </IconButton>
-                <Typography variant="h6" component="h2">
-                    Create a Post
+                <Typography variant="h5" component="h2">
+                    Create new post
                 </Typography>
                 <TextField
                     fullWidth
@@ -53,8 +78,34 @@ const PostModal = ({ open, handleClose, createPost }) => {
                     label="What's on your mind?"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    sx={{ mt: 2 }}
+                    sx={{mt: 2}}
+                    multiline
                 />
+                <Box
+                    {...getRootProps()}
+                    sx={{
+                        mt: 2,
+                        p: 2,
+                        border: '2px dashed gray',
+                        borderRadius: '10px',
+                        textAlign: 'center',
+                        cursor: 'pointer'
+                    }}
+                >
+                    <input {...getInputProps()} />
+                    <Typography>Drag an image here, or click to select one.</Typography>
+                </Box>
+
+                {/* Preview selected image */}
+                {image && (
+                    <Box sx={{ mt: 2 }}>
+                        <img
+                            src={URL.createObjectURL(image)}
+                            alt="Preview"
+                            style={{ maxWidth: '100%', borderRadius: '10px' }}
+                        />
+                    </Box>
+                )}
                 <Button
                     variant="contained"
                     color="primary"

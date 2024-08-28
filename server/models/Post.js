@@ -17,7 +17,7 @@ const PostSchema = new mongoose.Schema(
             default: "",
         },
         description: String,
-        postPic: {
+        imagePath: {
             type: String,
             default: "",
         },
