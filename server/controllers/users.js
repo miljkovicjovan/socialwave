@@ -72,7 +72,8 @@ export const getUserFollowing = async (req, res) => {
 // Follow/Unfollow a user functionality
 export const followUnfollow = async (req, res) => {
     try {
-        const { id, followId } = req.params;
+        const { id } = req.params;
+        const { followId } = req.body;
         
         const user = await User.findById(id);
         const follow = await User.findById(followId);

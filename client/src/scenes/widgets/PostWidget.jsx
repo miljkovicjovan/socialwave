@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setPost } from "state";
-import { colorTokens } from "theme";
 
 import { Typography, useTheme, Box, IconButton, Button } from "@mui/material";
 import { MoreHoriz, FavoriteBorderOutlined, FavoriteOutlined, ChatBubble } from '@mui/icons-material';

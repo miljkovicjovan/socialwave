@@ -15,6 +15,7 @@ const Profile = () => {
     const [user, setUser] = useState(null);
     const { username } = useParams();
     const token = useSelector((state) => state.token);
+    const loggedInUserId = useSelector((state) => state.user._id);
     const getUser = async () => {
         const response = await fetch(`http://localhost:3001/users/${username}`, {
             method: "GET",
@@ -23,6 +24,17 @@ const Profile = () => {
         const data = await response.json();
         setUser(data);
     };
+
+    const handleFollow = async () => {
+        try {
+            const response = await fetch(`http://localhost:3001/users/${loggedInUserId}/follow`, {
+                method: 'PATCH',
+                headers: {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`},
+                body: JSON.stringify({followId: user._id})
+            });
+            getUser();
+        } catch (err) {console.error('Error:', err);}
+    }
 
     useEffect(() => {
         getUser();
@@ -57,14 +69,26 @@ const Profile = () => {
                             <UserImage size="120"/>
                         </Box>
                     </FlexBetween>
-                    <Box marginTop="1rem" display="flex" justifyContent="center">
-                        <Button
-                        
-                            sx={{width:"100%", border:"2px solid gray", color:"white"}}
-                        >
-                            Edit profile
-                        </Button>
-                    </Box>
+                    {loggedInUserId === user._id ? (
+                        <Box marginTop="1rem" display="flex" justifyContent="center">
+                            <Button
+                                variant="contained"
+                                sx={{width:"100%", border:"2px solid gray", color:"white"}}
+                            >
+                                Edit profile
+                            </Button>
+                        </Box>
+                    ): (
+                        <Box marginTop="1rem" display="flex" justifyContent="center">
+                            <Button
+                                variant="contained"
+                                sx={{width:"100%", border:"2px solid gray", color:"white"}}
+                                onClick={handleFollow}
+                            >
+                                {user.followers.includes(loggedInUserId) ? "Unfollow" : "Follow"}
+                            </Button>
+                        </Box>
+                    )}
                 </Box>
             </Box>
             <PostsWidget userId={user._id} isProfile />
