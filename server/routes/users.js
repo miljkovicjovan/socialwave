@@ -9,6 +9,6 @@ router.get("/:id/followers", verifyToken, getUser);
 router.get("/:id/following", verifyToken, getUser);
 
 router.patch("/:id/follow", verifyToken, followUnfollow);
-router.patch("/:id/:followingId", verifyToken, removeFollower);
+router.patch("/:id/remove", verifyToken, removeFollower);
 
 export default router;

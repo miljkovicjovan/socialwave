@@ -110,7 +110,8 @@ export const followUnfollow = async (req, res) => {
 // Remove a follower functionality
 export const removeFollower = async (req, res) => {
     try {
-        const { id, followerId } = req.params;
+        const { id } = req.params;
+        const { followerId } = req.body;
 
         const user = await User.findById(id);
         const follower = await User.findById(followerId);
@@ -118,9 +119,9 @@ export const removeFollower = async (req, res) => {
             return res.status(404).json({ message: "User not found" });
         }
 
-        if (user.followers.includes(follwerId)) {
-            user.followers.filter((id) => id !== followerId);
-            follower.following.filter((id) => id !== id);
+        if (user.followers.includes(followerId)) {
+            user.followers = user.followers.filter((id) => id !== followerId);
+            follower.following = follower.following.filter((id) => id !== id);
         }
         await user.save();
         await follower.save();

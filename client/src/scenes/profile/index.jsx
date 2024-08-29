@@ -1,4 +1,4 @@
-import { Box, Button, Typography, useTheme,} from "@mui/material";
+import { Box, Button, Typography, useTheme, useMediaQuery} from "@mui/material";
 import FlexBetween from "components/FlexBetween";
 import Nav from "scenes/nav";
 import UserImage from "components/UserImage";
@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 import PostsWidget from "scenes/widgets/PostsWidget";
 
 const Profile = () => {
-
+    const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
     const theme = useTheme();
     const neutralLight = theme.palette.neutral.light;
 
@@ -24,7 +24,7 @@ const Profile = () => {
         const data = await response.json();
         setUser(data);
     };
-
+    
     const handleFollow = async () => {
         try {
             const response = await fetch(`http://localhost:3001/users/${loggedInUserId}/follow`, {
@@ -32,7 +32,26 @@ const Profile = () => {
                 headers: {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`},
                 body: JSON.stringify({followId: user._id})
             });
-            getUser();
+            if (response.ok) {
+                getUser();
+            } else {
+                console.error('Failed to follow/unfollow user');
+            }
+        } catch (err) {console.error('Error:', err);}
+    }
+
+    const handleRemoveFollower = async () => {
+        try {
+            const response = await fetch(`http://localhost:3001/users/${loggedInUserId}/remove`, {
+                method: 'PATCH',
+                headers: {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`},
+                body: JSON.stringify({followerId: user._id})
+            });
+            if (response.ok) {
+                getUser();
+            } else {
+                console.error('Failed to remove follower');
+            }
         } catch (err) {console.error('Error:', err);}
     }
 
@@ -46,7 +65,7 @@ const Profile = () => {
         <Box>
             <Nav/>
             <Box
-                width="30%"
+                width={isNonMobileScreens ? "40%" : "93%"}
                 padding="2rem"
                 m="3rem auto"
                 borderRadius="15px"
@@ -79,7 +98,7 @@ const Profile = () => {
                             </Button>
                         </Box>
                     ): (
-                        <Box marginTop="1rem" display="flex" justifyContent="center">
+                        <Box marginTop="1rem" display="flex" justifyContent="center" gap="2rem">
                             <Button
                                 variant="contained"
                                 sx={{width:"100%", border:"2px solid gray", color:"white"}}
@@ -87,6 +106,15 @@ const Profile = () => {
                             >
                                 {user.followers.includes(loggedInUserId) ? "Unfollow" : "Follow"}
                             </Button>
+                            {user.following.includes(loggedInUserId) && (
+                                <Button
+                                    variant="contained"
+                                    sx={{width:"100%", border:"2px solid gray", color:"white"}}
+                                    onClick={handleRemoveFollower}
+                                >
+                                    Remove Follower
+                                </Button>
+                            )}
                         </Box>
                     )}
                 </Box>
