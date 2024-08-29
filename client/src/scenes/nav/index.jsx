@@ -16,19 +16,22 @@ import { setMode, setLogout } from "state";
 import { useNavigate } from "react-router-dom";
 import FlexBetween from "components/FlexBetween";
 
-const Nav = () => {
+const Nav = ({ setUser }) => {
     const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const user = useSelector((state) => state.user);
-    // for testing purpose uncomment the bellow and comment the above
-    //const user = "1";
     const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
   
     const theme = useTheme();
     const neutralLight = theme.palette.neutral.light;
     const dark = theme.palette.neutral.dark;
     const background = theme.palette.background.default;
+
+    const handleProfileNavigation = () => {
+        navigate(`/profile/${user.username}`);
+        setUser(user);
+    };
 
     return (
         <FlexBetween 
@@ -76,7 +79,7 @@ const Nav = () => {
                         >
                             <MenuItem 
                                 value={user.username}
-                                onClick={() => navigate("/profile/"+user.username)}
+                                onClick={handleProfileNavigation}
                             >
                                 <Typography>{user.username}</Typography>
                             </MenuItem>
@@ -150,7 +153,7 @@ const Nav = () => {
                             >
                                 <MenuItem 
                                     value={user.username}
-                                    onClick={() => navigate("/profile/"+user.username)}
+                                    onClick={handleProfileNavigation}
                                 >
                                     <Typography>{user.username}</Typography>
                                 </MenuItem>

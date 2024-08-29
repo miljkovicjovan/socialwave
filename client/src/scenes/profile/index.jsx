@@ -63,7 +63,7 @@ const Profile = () => {
 
     return (
         <Box>
-            <Nav/>
+            <Nav setUser={setUser}/>
             <Box
                 width={isNonMobileScreens ? "40%" : "93%"}
                 padding="2rem"
