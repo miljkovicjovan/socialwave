@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
 import { 
     Box,
     IconButton,
@@ -20,6 +21,7 @@ const Nav = ({ setUser }) => {
     const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const location = useLocation();
     const user = useSelector((state) => state.user);
     const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
   
@@ -30,7 +32,10 @@ const Nav = ({ setUser }) => {
 
     const handleProfileNavigation = () => {
         navigate(`/profile/${user.username}`);
-        setUser(user);
+        // Check if the current path matches /profile/something
+        if (location.pathname.startsWith('/profile/')) {
+            setUser(user);
+        }
     };
 
     return (
