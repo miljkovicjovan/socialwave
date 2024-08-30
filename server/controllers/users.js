@@ -68,6 +68,13 @@ export const getUserFollowing = async (req, res) => {
     }
 }
 
+// Batch list of info by sending in array of ids
+export const batchList = async (req, res) => {
+    const { userIds } = req.body;
+    const users = await User.find({ _id: { $in: userIds } });
+    res.json(users);
+};
+
 /* ---- UPDATE ---- */
 // Follow/Unfollow a user functionality
 export const followUnfollow = async (req, res) => {
@@ -131,8 +138,8 @@ export const removeFollower = async (req, res) => {
         );
         
         const formattedFollowers = followers.map (
-            ({ _id, firstname, lastName, picturePath }) => {
-                return { _id, firstname, lastName, picturePath }
+            ({ _id, firstname, lastName, picturePath, followers, following }) => {
+                return { _id, firstname, lastName, picturePath, followers, following }
             }
         );
 

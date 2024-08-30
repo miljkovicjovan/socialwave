@@ -1,5 +1,5 @@
 import express from "express";
-import { getUser, followUnfollow, removeFollower } from "../controllers/users.js";
+import { getUser, followUnfollow, removeFollower, batchList} from "../controllers/users.js";
 import { verifyToken } from "../middleware/auth.js";
 
 const router = express.Router();
@@ -10,5 +10,7 @@ router.get("/:id/following", verifyToken, getUser);
 
 router.patch("/:id/follow", verifyToken, followUnfollow);
 router.patch("/:id/remove", verifyToken, removeFollower);
+
+router.post('/batch', verifyToken, batchList);
 
 export default router;

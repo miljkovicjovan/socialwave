@@ -1,16 +1,24 @@
-import { Box, Button, Typography, useTheme, useMediaQuery} from "@mui/material";
-import FlexBetween from "components/FlexBetween";
-import Nav from "scenes/nav";
-import UserImage from "components/UserImage";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
+
+import { Box, Button, Typography, useTheme, useMediaQuery} from "@mui/material";
+
+import FlexBetween from "components/FlexBetween";
+import Nav from "scenes/nav";
 import PostsWidget from "scenes/widgets/PostsWidget";
+import UserImage from "components/UserImage";
+import UserListModal from "components/modals/UserListModal";
 
 const Profile = () => {
     const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
     const theme = useTheme();
     const neutralLight = theme.palette.neutral.light;
+
+    const [open, setOpen] = useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+    const [type, setType] = useState("");
 
     const [user, setUser] = useState(null);
     const { username } = useParams();
@@ -79,9 +87,24 @@ const Profile = () => {
                             <Typography variant="h4">{`${user.firstName} ${user.lastName}`}</Typography>
                             <Typography fontStyle="italic">{user.bio ? user.bio : "No bio yet..."}</Typography>
                             <FlexBetween marginTop="1rem" color="gray" gap={3}>
-                                <Typography>{user.posts.length} {user.posts.length === 1 ? "post" : "posts"}</Typography>
-                                <Typography>{user.followers.length} {user.followers.length === 1 ? "follower" : "followers"}</Typography>
-                                <Typography>{user.following.length} following</Typography>
+                                <Typography
+                                    sx={{"&:hover":{color:"white", cursor:"pointer"}}}
+                                    onClick={() => {
+                                        setType("followers");
+                                        handleOpen();
+                                    }}
+                                >
+                                    {user.followers.length} {user.followers.length === 1 ? "follower" : "followers"}
+                                </Typography>
+                                <Typography
+                                    sx={{"&:hover":{color:"white", cursor:"pointer"}}}
+                                    onClick={() => {
+                                        setType("following");
+                                        handleOpen();
+                                    }}
+                                >
+                                    {user.following.length} following
+                                </Typography>
                             </FlexBetween>
                         </Box>
                         <Box>
@@ -120,6 +143,7 @@ const Profile = () => {
                 </Box>
             </Box>
             <PostsWidget userId={user._id} isProfile />
+            <UserListModal user={user} setUser={setUser} open={open} handleClose={handleClose} type={type} userId={user._id} />
         </Box>
     );
 }
