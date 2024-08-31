@@ -5,8 +5,8 @@ import { useSelector } from "react-redux";
 import { Box, Button, Typography, useTheme, useMediaQuery} from "@mui/material";
 
 import FlexBetween from "components/FlexBetween";
-import Nav from "scenes/nav";
-import PostsWidget from "scenes/widgets/PostsWidget";
+import Nav from "../nav";
+import PostsWidget from "components/widgets/PostsWidget";
 import UserImage from "components/UserImage";
 import UserListModal from "components/modals/UserListModal";
 

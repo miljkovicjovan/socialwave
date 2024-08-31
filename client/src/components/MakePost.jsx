@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { Box, IconButton } from "@mui/material";
-import AddIcon from '@mui/icons-material/Add';
-import PostModal from './PostModal';
 import { useDispatch, useSelector } from "react-redux";
 import { setPosts } from "state";
+
+import { Box, IconButton } from "@mui/material";
+import AddIcon from '@mui/icons-material/Add';
+
+import PostModal from './modals/PostModal';
 
 const MakePost = () => {
     const dispatch = useDispatch();
@@ -32,40 +34,24 @@ const MakePost = () => {
             } else {
                 console.log(response);
             }
-        } catch (err) {
-            console.error('Error:', err);
-        }
+        } catch (err) {console.error('Error:', err);}
     };
 
     return (
         <>
-            <Box
-                sx={{
-                    position: "fixed",
-                    bottom: "20px",
-                    right: "20px",
-                }}
-            >
+            <Box sx={{position: "fixed", bottom: "20px", right: "20px"}}>
                 <IconButton
                     onClick={handleOpen}
                     sx={{
                         backgroundColor:"gray",
                         color:'white',
                         borderRadius: "10px",
-                        "&:hover": {
-                            cursor: "pointer",
-                        },
+                        "&:hover": {cursor: "pointer"}
                     }}
                 >
-                    <AddIcon 
-                        sx={{
-                            fontSize: "3rem"
-                        }}
-                    />
+                    <AddIcon sx={{fontSize: "3rem"}}/>
                 </IconButton>
             </Box>
-            
-            {/* Pass the createPost function to PostModal */}
             <PostModal open={open} handleClose={handleClose} createPost={createPost} />
         </>
     );

@@ -1,9 +1,11 @@
 import { useState } from "react";
+
 import { Box, Typography, useTheme, useMediaQuery } from "@mui/material";
+
 import CenteredBox from "components/CenteredBox";
 import Form from "./Form";
 
-const LoginPage = () => {
+const Login = () => {
     const [isLogin, setIsLogin] = useState(true);
     const theme = useTheme();
     const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
@@ -26,4 +28,4 @@ const LoginPage = () => {
     );
 };
 
-export default LoginPage;
+export default Login;

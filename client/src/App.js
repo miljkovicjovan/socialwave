@@ -1,12 +1,14 @@
 import { BrowserRouter, Navigate, Routes, Route } from "react-router-dom";
-import Home from 'scenes/home';
-import Profile from "scenes/profile";
-import Login from "scenes/login";
+
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
 import { themeSettings } from "./theme";
+
+import Home from "components/scenes/home";
+import Profile from "components/scenes/profile";
+import Login from "components/scenes/login";
 
 function App() {
 	// get the current mode state from redux

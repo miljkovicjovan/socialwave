@@ -9,7 +9,7 @@ import { formatDistanceToNow } from 'date-fns';
 
 import UserImage from "components/UserImage";
 import FlexBetween from "components/FlexBetween";
-import PostOptionsModal from "components/PostOptionsModal";
+import PostOptionsModal from "components/modals/PostOptionsModal";
 
 const PostWidget = ({
     postId,
