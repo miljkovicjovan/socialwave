@@ -50,8 +50,9 @@ const PostWidget = ({
 
     return (
         <Box 
+            margin="1rem 0"
             padding="0.6rem 1rem 0rem 1rem"
-            sx={{border:"1px solid gray", backgroundColor:neutralLight}}
+            sx={{border:"1px solid gray", borderRadius:"20px", backgroundColor:neutralLight}}
         >
             <FlexBetween >
                 <Box display="flex" flexDirection="row">

@@ -45,7 +45,7 @@ const PostsWidget = ({ userId, isProfile = false }) => {
     }, [userId]); // eslint-disable-line react-hooks/exhaustive-deps
 
     return (
-        <Box width={isNonMobileScreens ? "40%" : "93%"} sx={{margin:"1rem auto"}}>
+        <Box width={isNonMobileScreens ? "40%" : "75%"} sx={{margin:"1rem auto"}}>
             {posts.map(
                 ({
                     _id,

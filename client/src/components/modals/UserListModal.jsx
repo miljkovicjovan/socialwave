@@ -102,7 +102,7 @@ const UserListModal = ({ user, setUser, open, handleClose, type, userId }) => {
             if (type === "followers") fetchFollowers();
             if (type === "following") fetchFollowing();
         }
-    }, [open, user.following, user.followers]);
+    }, [open, user.following, user.followers]); // eslint-disable-line react-hooks/exhaustive-deps
 
 
     return (

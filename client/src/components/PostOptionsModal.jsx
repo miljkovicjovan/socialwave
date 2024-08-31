@@ -66,15 +66,15 @@ const PostOptionsModal = ({
                 </IconButton>
                 <Box sx={{ mt: 4, display: 'flex', justifyContent: 'space-between', flexDirection: 'column'}} gap="1rem">
                     <Button 
-                        variant="contained" 
                         color="primary" 
+                        sx={{width:"100%", border:"2px solid gray"}}
                         onClick={handleEdit}
                     >
                         Edit post
                     </Button>
-                    <Button 
-                        variant="outlined" 
+                    <Button
                         color="error" 
+                        sx={{width:"100%", border:"2px solid gray"}}
                         onClick={handleDelete}
                     >
                         Delete post

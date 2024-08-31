@@ -48,19 +48,23 @@ const Nav = ({ setUser }) => {
                 backgroundColor: background
             }}
         >
-            <FlexBetween gap="1.75rem">
+            <Typography 
+                display="flex"
+                alignItems="center"
+                onClick={() => navigate("/home")}
+                sx={{
+                    "&:hover": {
+                        cursor: "pointer",
+                    },
+                }}
+            >
                 <IconButton
                     color="white"
-                    onClick={() => navigate("/home")}
-                    sx={{
-                        "&:hover": {
-                            cursor: "pointer",
-                        },
-                    }}
                 >
                     <Waves/>
                 </IconButton>
-            </FlexBetween>
+                SocialWave
+            </Typography>
 
             {/* DESKTOP NAV */}
             {isNonMobileScreens ? (

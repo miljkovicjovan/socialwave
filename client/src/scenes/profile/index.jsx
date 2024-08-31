@@ -88,7 +88,7 @@ const Profile = () => {
                             <Typography fontStyle="italic">{user.bio ? user.bio : "No bio yet..."}</Typography>
                             <FlexBetween marginTop="1rem" color="gray" gap={3}>
                                 <Typography
-                                    sx={{"&:hover":{color:"white", cursor:"pointer"}}}
+                                    sx={{"&:hover":{cursor:"pointer"}}}
                                     onClick={() => {
                                         setType("followers");
                                         handleOpen();
@@ -97,7 +97,7 @@ const Profile = () => {
                                     {user.followers.length} {user.followers.length === 1 ? "follower" : "followers"}
                                 </Typography>
                                 <Typography
-                                    sx={{"&:hover":{color:"white", cursor:"pointer"}}}
+                                    sx={{"&:hover":{cursor:"pointer"}}}
                                     onClick={() => {
                                         setType("following");
                                         handleOpen();
@@ -114,8 +114,7 @@ const Profile = () => {
                     {loggedInUserId === user._id ? (
                         <Box marginTop="1rem" display="flex" justifyContent="center">
                             <Button
-                                variant="contained"
-                                sx={{width:"100%", border:"2px solid gray", color:"white"}}
+                                sx={{width:"100%", border:"2px solid gray"}}
                             >
                                 Edit profile
                             </Button>

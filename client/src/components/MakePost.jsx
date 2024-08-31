@@ -47,13 +47,12 @@ const MakePost = () => {
                 }}
             >
                 <IconButton
-                    color="white"
                     onClick={handleOpen}
                     sx={{
+                        backgroundColor:"gray",
+                        color:'white',
                         borderRadius: "10px",
-                        backgroundColor: "gray",
                         "&:hover": {
-                            backgroundColor: "gray",
                             cursor: "pointer",
                         },
                     }}
