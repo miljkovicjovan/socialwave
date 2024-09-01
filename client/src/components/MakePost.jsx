@@ -32,7 +32,7 @@ const MakePost = () => {
                 const posts = await response.json();
                 dispatch(setPosts({ posts }));
             } else {
-                console.log(response);
+                console.error(response);
             }
         } catch (err) {console.error('Error:', err);}
     };

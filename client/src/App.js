@@ -9,6 +9,7 @@ import { themeSettings } from "./theme";
 import Home from "components/scenes/home";
 import Profile from "components/scenes/profile";
 import Login from "components/scenes/login";
+import Notifications from "components/scenes/notifications";
 
 function App() {
 	// get the current mode state from redux
@@ -37,6 +38,10 @@ function App() {
 					<Route
 						path="/profile/:username"
 						element={isAuth ? <Profile/> : <Navigate to="/"/>}
+					/>
+					<Route
+						path="/notifications"
+						element={isAuth ? <Notifications/> : <Navigate to="/"/>}
 					/>
 					{/* Redirect to Login if no route matches */}
 					<Route path="*" element={<Navigate to="/" />} />

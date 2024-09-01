@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { 
     Box,
@@ -11,7 +11,10 @@ import {
     useTheme,
     useMediaQuery
 } from "@mui/material";
-import { LightMode, DarkMode, Menu, Close, Waves } from "@mui/icons-material";
+import { LightMode, DarkMode, Menu, Close, Waves,
+    NotificationsNone, Notifications,
+    HomeOutlined, Home,
+    PersonOutlineOutlined, Person } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import { setMode, setLogout } from "state";
 import { useNavigate } from "react-router-dom";
@@ -24,6 +27,8 @@ const Nav = ({ setUser }) => {
     const location = useLocation();
     const user = useSelector((state) => state.user);
     const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
+
+    const [icon, setIcon] = useState();
   
     const theme = useTheme();
     const neutralLight = theme.palette.neutral.light;
@@ -37,6 +42,16 @@ const Nav = ({ setUser }) => {
             setUser(user);
         }
     };
+
+    useEffect(() => {
+        if (location.pathname.includes("profile")) {
+            setIcon("profile");
+        } else if (location.pathname.includes("home") || location.pathname === "/") {
+            setIcon("home");
+        } else if (location.pathname.includes("notifications")) {
+            setIcon("notifications");
+        }
+    }, [location.pathname]);
 
     return (
         <FlexBetween 
@@ -69,6 +84,17 @@ const Nav = ({ setUser }) => {
             {/* DESKTOP NAV */}
             {isNonMobileScreens ? (
                 <FlexBetween gap="2rem">
+                    <FlexBetween gap="1rem">
+                        <IconButton onClick={() => navigate("/")} color="white">
+                            {icon === "home" ? <Home/> : <HomeOutlined/>}
+                        </IconButton>
+                        <IconButton onClick={() => navigate(`/profile/${user.username}`)} color="white">
+                            {icon === "profile" ? <Person/> : <PersonOutlineOutlined/>}
+                        </IconButton>
+                        <IconButton onClick={() => navigate("/notifications")} color="white">
+                            {icon === "notifications" ? <Notifications/> : <NotificationsNone/>}
+                        </IconButton>
+                    </FlexBetween>
                     <FormControl variant="standard" value={user.username}>
                         <Select
                             value={user.username}
@@ -136,12 +162,24 @@ const Nav = ({ setUser }) => {
                         alignItems="center"
                         gap="3rem"
                     >
-                        <IconButton onClick={() => dispatch(setMode())} sx={{ fontSize: "25px" }}>
-                            {theme.palette.mode === "dark" ? 
-                                (<DarkMode sx={{ fontSize: "25px" }} />) : 
-                                ( <LightMode sx={{ color: dark, fontSize: "25px" }} />)
-                            }
-                        </IconButton>
+                        <Box display="flex" flexDirection="column">
+                            <IconButton onClick={() => navigate("/")}
+                                sx={{padding:"0.8rem", borderRadius:"10px"}} color="white">
+                                {icon === "home" ? <Home/> : <HomeOutlined/>}
+                                <Typography pl="0.3rem">Home</Typography>
+                            </IconButton>
+                            <IconButton onClick={() => navigate(`/profile/${user.username}`)}
+                                sx={{padding:"0.8rem", borderRadius:"10px"}} color="white">
+                                {icon === "profile" ? <Person/> : <PersonOutlineOutlined/>}
+                                <Typography pl="0.3rem">Profile</Typography>
+                            </IconButton>
+                            <IconButton 
+                                onClick={() => navigate("/notifications")}
+                                sx={{padding:"0.8rem", borderRadius:"10px"}} color="white">
+                                {icon === "notifications" ? <Notifications/> : <NotificationsNone/>}
+                                <Typography pl="0.3rem">Notifications</Typography>
+                            </IconButton>
+                        </Box>
                         <FormControl variant="standard" value={user.username}>
                             <Select
                             value={user.username}
@@ -173,6 +211,12 @@ const Nav = ({ setUser }) => {
                                 </MenuItem>
                             </Select>
                         </FormControl>
+                        <IconButton onClick={() => dispatch(setMode())} sx={{ fontSize: "25px" }}>
+                            {theme.palette.mode === "dark" ? 
+                                (<DarkMode sx={{ fontSize: "25px" }} />) : 
+                                ( <LightMode sx={{ color: dark, fontSize: "25px" }} />)
+                            }
+                        </IconButton>
                     </FlexBetween>
                 </Box>
             )}

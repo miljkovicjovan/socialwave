@@ -28,6 +28,7 @@ const PostWidget = ({
 
     const dispatch = useDispatch();
     const token = useSelector((state) => state.token);
+    const loggedInUser = useSelector((state) => state.user);
     const loggedInUserId = useSelector((state) => state.user._id);
     const isLiked = Boolean(likes[loggedInUserId]);
     const likeCount = Object.keys(likes).length;
@@ -36,6 +37,24 @@ const PostWidget = ({
     const main = palette.neutral.main;
     const neutralLight = palette.neutral.light;
 
+    const sendNotification = async () => {
+        const userProfilePic = loggedInUser.profilePic ? loggedInUser.profilePic : "default.jpg";
+        try {
+            const response = await fetch(`http://localhost:3001/notifications/create`, {
+                method: "POST",
+                headers: {'Content-Type':'application/json', Authorization:`Bearer ${token}`},
+                body: JSON.stringify({ 
+                    userId: postUserId, 
+                    type: "Liked your post", 
+                    referenceId: loggedInUser._id, 
+                    referenceUsername: loggedInUser.username, 
+                    referenceProfilePic: userProfilePic
+                })
+            });
+            const data = await response.json();
+        } catch (err) {console.error('Error:', err);}
+    }
+
     const handleLike = async () => {
         try {
             const response = await fetch(`http://localhost:3001/posts/${postId}/like`, {
@@ -43,6 +62,9 @@ const PostWidget = ({
                 headers: {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`},
                 body: JSON.stringify({userId: loggedInUserId})
             });
+            if (response.ok) {
+                sendNotification();
+            }
             const updatedPost = await response.json();
             dispatch(setPost({ post: updatedPost }));
         } catch (err) {console.error('Error:', err);}

@@ -23,7 +23,7 @@ const Profile = () => {
     const [user, setUser] = useState(null);
     const { username } = useParams();
     const token = useSelector((state) => state.token);
-    const loggedInUserId = useSelector((state) => state.user._id);
+    const loggedInUser = useSelector((state) => state.user);
     const getUser = async () => {
         const response = await fetch(`http://localhost:3001/users/${username}`, {
             method: "GET",
@@ -32,16 +32,35 @@ const Profile = () => {
         const data = await response.json();
         setUser(data);
     };
+
+    const sendNotification = async () => {
+        const profilePic = loggedInUser.profilePic ? loggedInUser.profilePic : "default.jpg";
+        try {
+            const response = await fetch(`http://localhost:3001/notifications/create`, {
+                method: "POST",
+                headers: {'Content-Type':'application/json', Authorization:`Bearer ${token}`},
+                body: JSON.stringify({ 
+                    userId: user._id, 
+                    type: "New follower", 
+                    referenceId: loggedInUser._id, 
+                    referenceUsername: loggedInUser.username, 
+                    referenceProfilePic: profilePic
+                })
+            });
+            const data = await response.json();
+        } catch (err) {console.error('Error:', err);}
+    }
     
     const handleFollow = async () => {
         try {
-            const response = await fetch(`http://localhost:3001/users/${loggedInUserId}/follow`, {
+            const response = await fetch(`http://localhost:3001/users/${loggedInUser._id}/follow`, {
                 method: 'PATCH',
                 headers: {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`},
                 body: JSON.stringify({followId: user._id})
             });
             if (response.ok) {
-                getUser();
+                await getUser();
+                sendNotification();
             } else {
                 console.error('Failed to follow/unfollow user');
             }
@@ -50,7 +69,7 @@ const Profile = () => {
 
     const handleRemoveFollower = async () => {
         try {
-            const response = await fetch(`http://localhost:3001/users/${loggedInUserId}/remove`, {
+            const response = await fetch(`http://localhost:3001/users/${loggedInUser._id}/remove`, {
                 method: 'PATCH',
                 headers: {'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`},
                 body: JSON.stringify({followerId: user._id})
@@ -111,7 +130,7 @@ const Profile = () => {
                             <UserImage size="120"/>
                         </Box>
                     </FlexBetween>
-                    {loggedInUserId === user._id ? (
+                    {loggedInUser._id === user._id ? (
                         <Box marginTop="1rem" display="flex" justifyContent="center">
                             <Button
                                 sx={{width:"100%", border:"2px solid gray"}}
@@ -126,9 +145,9 @@ const Profile = () => {
                                 sx={{width:"100%", border:"2px solid gray", color:"white"}}
                                 onClick={handleFollow}
                             >
-                                {user.followers.includes(loggedInUserId) ? "Unfollow" : "Follow"}
+                                {user.followers.includes(loggedInUser._id) ? "Unfollow" : "Follow"}
                             </Button>
-                            {user.following.includes(loggedInUserId) && (
+                            {user.following.includes(loggedInUser._id) && (
                                 <Button
                                     variant="contained"
                                     sx={{width:"100%", border:"2px solid gray", color:"white"}}
