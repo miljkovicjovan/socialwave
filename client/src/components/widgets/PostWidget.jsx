@@ -10,6 +10,8 @@ import { formatDistanceToNow } from 'date-fns';
 import UserImage from "components/UserImage";
 import FlexBetween from "components/FlexBetween";
 import PostOptionsModal from "components/modals/PostOptionsModal";
+import CommentsBox from "components/CommentsBox";
+import CommentModal from "components/modals/CommentModal";
 
 const PostWidget = ({
     postId,
@@ -19,25 +21,61 @@ const PostWidget = ({
     name,
     description,
     imagePath,
-    likes
+    likes,
+    comments
 }) => { 
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    // Options modal state settings
     const [optionsOpen, setOptionsOpen] = useState(false);
     const handleOptionsOpen = () => setOptionsOpen(true);
 
-    const navigate = useNavigate();
-
-    const dispatch = useDispatch();
+    // redux store info
     const token = useSelector((state) => state.token);
     const loggedInUser = useSelector((state) => state.user);
     const loggedInUserId = useSelector((state) => state.user._id);
+
+    // like / comment info
     const isLiked = Boolean(likes[loggedInUserId]);
     const likeCount = Object.keys(likes).length;
+    const commentCount = Object.keys(comments).length;
 
+    // styling settings
     const { palette } = useTheme();
     const main = palette.neutral.main;
     const neutralLight = palette.neutral.light;
 
-    const sendNotification = async () => {
+    // Comment modal state settings
+    const [open, setOpen] = useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+
+    const createComment = async (comment) => {
+        try {
+            const response = await fetch('http://localhost:3001/comments/comment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type':'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ 
+                    userId: loggedInUserId,
+                    postId: postId,
+                    text: comment
+                })
+            });
+            if (response.ok) {
+                const updatedPost = await response.json();
+                dispatch(setPost({ post: updatedPost }));
+                sendNotification("Commented on your post");
+            } else {
+                console.error('Failed to create comment:', response.status, response.statusText);
+            }
+        } catch (err) {console.error('Error:', err);}
+    };
+
+    const sendNotification = async (type) => {
         const userProfilePic = loggedInUser.profilePic ? loggedInUser.profilePic : "default.jpg";
         try {
             const response = await fetch(`http://localhost:3001/notifications/create`, {
@@ -45,13 +83,14 @@ const PostWidget = ({
                 headers: {'Content-Type':'application/json', Authorization:`Bearer ${token}`},
                 body: JSON.stringify({ 
                     userId: postUserId, 
-                    type: "Liked your post", 
+                    type: type, 
                     referenceId: loggedInUser._id, 
                     referenceUsername: loggedInUser.username, 
                     referenceProfilePic: userProfilePic
                 })
             });
             const data = await response.json();
+            if (data) console.log("notification sent");
         } catch (err) {console.error('Error:', err);}
     }
 
@@ -63,7 +102,7 @@ const PostWidget = ({
                 body: JSON.stringify({userId: loggedInUserId})
             });
             if (response.ok) {
-                sendNotification();
+                sendNotification("Liked your post");
             }
             const updatedPost = await response.json();
             dispatch(setPost({ post: updatedPost }));
@@ -112,14 +151,22 @@ const PostWidget = ({
                     {isLiked ? (<FavoriteOutlined/>) : (<FavoriteBorderOutlined/>)}
                     <Typography pl="0.2rem">{likeCount}</Typography>
                 </Button>
-                <Button sx={{minWidth:"0", borderRadius:"20px"}}>
+                <Button onClick={() => handleOpen()} sx={{minWidth:"0", borderRadius:"20px"}}>
                     <ChatBubble/>
-                    <Typography pl="0.2rem">0</Typography>
+                    <Typography pl="0.2rem">{commentCount}</Typography>
                 </Button>
             </Box>
+            {commentCount > 0 && (
+                <Box>
+                    <hr/>
+                    <Typography textAlign="center" pb="0.5rem">Comments ({commentCount})</Typography>
+                    <CommentsBox comments={comments}/>
+                </Box>
+                )}
+            <CommentModal open={open} handleClose={handleClose} createComment={createComment} />
             {postUserId === loggedInUserId && (<PostOptionsModal postId={postId} open={optionsOpen} setOpen={setOptionsOpen}/>)}
         </Box>
     );
-  };
-  
-  export default PostWidget;
+};
+
+export default PostWidget;

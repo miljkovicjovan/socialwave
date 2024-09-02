@@ -1,29 +1,39 @@
 import Comment from "../models/Comment.js";
+import Post from "../models/Post.js";
+import User from "../models/User.js";
 
 /* ---- CREATE ---- */
 // Creating a comment
 export const createComment = async (req, res) => {
     try {
-        const { userId, text } = req.body;
+        const { userId, postId, text } = req.body;
 
-        if (!userId || !text) {
-            return res.status(400).json({ error: "User ID and text are required" });
+        if (!userId || !postId || !text) {
+            return res.status(400).json({ error: "All fields are required" });
         }
 
         const user = await User.findById(userId);
+        const post = await Post.findById(postId);
+
+        if (!user || !post) {
+            return res.status(404).json({ message: "User or Post not found" });
+        }
 
         const newComment = new Comment ({
             userId,
-            firstName: user.firstName,
-            lastName: user.lastName,
+            postId,
+            username: user.username,
             profilePic: user.profilePic,
             text
         })
         await newComment.save();
 
-        // after saving the new comment make sure to retreive all comments again
-        const comment = await Comment.find();
-        res.status(201).json(comment);
+        // add the comment directly to the post's comments array
+        post.comments.push(newComment);
+        await post.save();
+
+        // return the updated post's comments
+        res.status(201).json(post);
     } catch (err) {
         res.status(409).json({ message: err.message });
     }
