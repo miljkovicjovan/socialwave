@@ -88,7 +88,7 @@ const Nav = ({ setUser }) => {
                         <IconButton onClick={() => navigate("/")} color="white">
                             {icon === "home" ? <Home/> : <HomeOutlined/>}
                         </IconButton>
-                        <IconButton onClick={() => navigate(`/profile/${user.username}`)} color="white">
+                        <IconButton onClick={() => handleProfileNavigation()} color="white">
                             {icon === "profile" ? <Person/> : <PersonOutlineOutlined/>}
                         </IconButton>
                         <IconButton onClick={() => navigate("/notifications")} color="white">
@@ -168,7 +168,7 @@ const Nav = ({ setUser }) => {
                                 {icon === "home" ? <Home/> : <HomeOutlined/>}
                                 <Typography pl="0.3rem">Home</Typography>
                             </IconButton>
-                            <IconButton onClick={() => navigate(`/profile/${user.username}`)}
+                            <IconButton onClick={() => handleProfileNavigation()}
                                 sx={{padding:"0.8rem", borderRadius:"10px"}} color="white">
                                 {icon === "profile" ? <Person/> : <PersonOutlineOutlined/>}
                                 <Typography pl="0.3rem">Profile</Typography>
