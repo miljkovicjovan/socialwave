@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { setUsername } from "state";
 
@@ -12,7 +12,6 @@ import UserImage from "components/UserImage";
 import UserListModal from "components/modals/UserListModal";
 import EditProfileModal from "components/modals/EditProfileModal";
 import ErrorModal from "components/modals/ErrorModal";
-import { formatDate } from "date-fns";
 
 const Profile = () => {
     // theme/ui settings
@@ -31,12 +30,13 @@ const Profile = () => {
     // important user/token info
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const location = useLocation();
+    
     const [user, setUser] = useState(null);
     const token = useSelector((state) => state.token);
+    const { username } = useParams();
     const loggedInUser = useSelector((state) => state.user);
     const getUser = async () => {
-        const response = await fetch(`http://localhost:3001/users/${loggedInUser.username}`, {
+        const response = await fetch(`http://localhost:3001/users/${username}`, {
             method: "GET",
             headers: { Authorization: `Bearer ${token}` },
         });
@@ -185,7 +185,7 @@ const Profile = () => {
                         </Box>
                         <Box>
                             <UserImage
-                                image={user.profilePic ? user.profilePic : "default.jpg"}
+                                /* image={user.profilePic ? user.profilePic : "default.jpg"} */
                                 size="120"
                             />
                         </Box>
@@ -222,7 +222,14 @@ const Profile = () => {
                 </Box>
             </Box>
             <PostsWidget userId={user._id} isProfile />
-            <UserListModal user={user} setUser={setUser} open={open} handleClose={handleClose} type={type} userId={user._id} />
+            <UserListModal
+                user={user}
+                setUser={setUser}
+                open={open}
+                handleClose={handleClose}
+                type={type}
+                userId={user._id}
+            />
             <EditProfileModal 
                 openEdit={openEdit} 
                 handleCloseEdit={handleCloseEdit} 

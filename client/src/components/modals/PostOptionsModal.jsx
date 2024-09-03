@@ -71,7 +71,7 @@ const PostOptionsModal = ({
                         display: 'flex', 
                         justifyContent: 'space-between', 
                         flexDirection: 'column'
-                        }} 
+                    }} 
                     gap="1rem"
                 >
                     <Button 
