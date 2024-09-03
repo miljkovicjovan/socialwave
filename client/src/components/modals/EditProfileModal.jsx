@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { Modal, Typography, IconButton, Box, TextField, Button } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
@@ -54,6 +54,17 @@ const EditProfileModal = ({ user, openEdit, handleCloseEdit, editProfile}) => {
 
         handleCloseEdit();
     }
+    
+    useEffect(() => {
+        if (openEdit) {
+            // Update state with the latest user data each time the modal opens
+            setUsername(user.username);
+            setFirstName(user.firstName);
+            setLastName(user.lastName);
+            setBio(user.bio);
+            setImage(null);
+        }
+    }, [openEdit, user]);
 
     return ( 
         <Modal
