@@ -97,6 +97,7 @@ const Nav = ({ setUser }) => {
                     </FlexBetween>
                     <FormControl variant="standard" value={user.username}>
                         <Select
+                            isactive="true"
                             value={user.username}
                             sx={{
                                 backgroundColor: neutralLight,

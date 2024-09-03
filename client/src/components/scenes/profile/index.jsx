@@ -119,10 +119,10 @@ const Profile = () => {
                 body: formData
             });
             if (response.ok) {
-                console.log(formData.username)
-                dispatch(setUsername({ username: formData.username }));
-                setUser((prevUser) => ({ ...prevUser, formData }));
-                navigate(`/profile/${formData.username}`); // Navigate to the new username
+                const formUsername = formData.get('username');
+                dispatch(setUsername({ username: formUsername }));
+                setUser((prevUser) => ({ ...prevUser, formUsername }));
+                navigate(`/profile/${formUsername}`); // Navigate to the new username
             } else {
                 const errorData = await response.json();
                 console.error('Failed to edit profile:', errorData.message);
