@@ -41,6 +41,10 @@ const EditProfileModal = ({ user, openEdit, handleCloseEdit, editProfile}) => {
         }
         await editProfile(formData);
 
+        handleClose();
+    };
+
+    const handleClose = async () => {
         // reset to default
         setUsername(user.username);
         setFirstName(user.firstName);
@@ -49,12 +53,12 @@ const EditProfileModal = ({ user, openEdit, handleCloseEdit, editProfile}) => {
         setBio(user.bio);
 
         handleCloseEdit();
-    };
+    }
 
     return ( 
         <Modal
             open={openEdit}
-            onClose={handleCloseEdit}
+            onClose={handleClose}
             sx={{
                 display: 'flex',
                 alignItems: 'center',
@@ -71,7 +75,7 @@ const EditProfileModal = ({ user, openEdit, handleCloseEdit, editProfile}) => {
                 }}
             >
                 <IconButton
-                    onClick={handleCloseEdit}
+                    onClick={handleClose}
                     sx={{
                         position: 'absolute',
                         top: 10,
