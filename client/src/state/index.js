@@ -42,11 +42,16 @@ export const authSlice = createSlice({
         },
         deletePost: (state, action) => {
             state.posts = state.posts.filter(post => post._id !== action.payload.postId);
-        }
+        },
+        setUsername: (state, action) => {
+            if (state.user) {
+                state.user.username = action.payload.username;
+            }
+        },
     }
 })
 
 // Export actions for use in components
-export const { setMode, setLogin, setLogout, setFollowing, setPosts, setPost, deletePost } = authSlice.actions;
+export const { setMode, setLogin, setLogout, setFollowing, setPosts, setPost, deletePost, setUsername } = authSlice.actions;
 // Export the reducer to be used in the store
 export default authSlice.reducer;

@@ -28,6 +28,7 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 import { createPost } from "./controllers/posts.js";
+import { editProfile } from "./controllers/users.js";
 
 // Set up storage engine
 const storage = multer.diskStorage({
@@ -65,6 +66,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // routes with file uploads
 app.post("/auth/register", register);
 app.post("/posts", verifyToken, upload.single("image"), createPost);
+app.patch("/users/:id/edit", verifyToken, upload.single("image"), editProfile);
 
 // routes
 app.use("/auth", authRoutes);
@@ -72,7 +74,6 @@ app.use("/users", userRoutes);
 app.use("/posts", postRoutes);
 app.use("/comments", commentRoutes);
 app.use("/notifications", notificationRoutes);
-
 
 // mongoose setup
 const PORT = process.env.PORT || 6001;

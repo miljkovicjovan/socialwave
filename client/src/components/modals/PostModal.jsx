@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Box, IconButton, Modal, Typography, TextField, Button } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import { useDropzone } from 'react-dropzone';
@@ -36,7 +36,7 @@ const PostModal = ({ open, handleClose, createPost }) => {
             'image/jpeg': ['.jpeg'],
         },
         onDrop,
-        maxFiles: 1, // Limit to one file
+        maxFiles: 1
     });
 
     return (

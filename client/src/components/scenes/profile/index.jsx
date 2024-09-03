@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { setUsername } from "state";
 
 import { Box, Button, Typography, useTheme, useMediaQuery} from "@mui/material";
 
@@ -9,29 +10,56 @@ import Nav from "../nav";
 import PostsWidget from "components/widgets/PostsWidget";
 import UserImage from "components/UserImage";
 import UserListModal from "components/modals/UserListModal";
+import EditProfileModal from "components/modals/EditProfileModal";
+import ErrorModal from "components/modals/ErrorModal";
+import { formatDate } from "date-fns";
 
 const Profile = () => {
+    // theme/ui settings
     const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
     const theme = useTheme();
     const neutralLight = theme.palette.neutral.light;
 
+    // User list modal states
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+
+    // notification type
     const [type, setType] = useState("");
 
+    // important user/token info
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const location = useLocation();
     const [user, setUser] = useState(null);
-    const { username } = useParams();
     const token = useSelector((state) => state.token);
     const loggedInUser = useSelector((state) => state.user);
     const getUser = async () => {
-        const response = await fetch(`http://localhost:3001/users/${username}`, {
+        const response = await fetch(`http://localhost:3001/users/${loggedInUser.username}`, {
             method: "GET",
             headers: { Authorization: `Bearer ${token}` },
         });
         const data = await response.json();
         setUser(data);
     };
+
+    // edit profile modal
+    const [openEdit, setOpenEdit] = useState(false);
+    const handleOpenEdit = () => setOpenEdit(true);
+    const handleCloseEdit = () => setOpenEdit(false);
+
+    // duplicate username error
+    const [error, setError] = useState("");
+    const [openError, setOpenError] = useState(false);
+    const handleOpenError = (error) => { 
+        setError(error)
+        setOpenError(true);
+    }
+    const handleCloseError = () => {
+        setOpenError(false);
+        handleOpenEdit();
+    }
 
     const sendNotification = async () => {
         const profilePic = loggedInUser.profilePic ? loggedInUser.profilePic : "default.jpg";
@@ -48,6 +76,7 @@ const Profile = () => {
                 })
             });
             const data = await response.json();
+            console.log("Notification sent successfuly: ", data);
         } catch (err) {console.error('Error:', err);}
     }
     
@@ -82,6 +111,28 @@ const Profile = () => {
         } catch (err) {console.error('Error:', err);}
     }
 
+    const editProfile = async (formData) => {
+        try {
+            const response = await fetch(`http://localhost:3001/users/${loggedInUser._id}/edit`, {
+                method: 'PATCH',
+                headers: {'Authorization': `Bearer ${token}`},
+                body: formData
+            });
+            if (response.ok) {
+                console.log(formData.username)
+                dispatch(setUsername({ username: formData.username }));
+                setUser((prevUser) => ({ ...prevUser, formData }));
+                navigate(`/profile/${formData.username}`); // Navigate to the new username
+            } else {
+                const errorData = await response.json();
+                console.error('Failed to edit profile:', errorData.message);
+                if(errorData.message.includes("duplicate")) {
+                    handleOpenError("The username you selected is already in use.");
+                }
+            }
+        } catch (err) {console.error('Error:', err);} 
+    }
+
     useEffect(() => {
         getUser();
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -102,9 +153,15 @@ const Profile = () => {
                 <Box>
                     <FlexBetween>
                         <Box>
-                            <Typography variant="h3" marginBottom="0.8rem" sx={{fontWeight: 700}}>{user.username}</Typography>
-                            <Typography variant="h4">{`${user.firstName} ${user.lastName}`}</Typography>
-                            <Typography fontStyle="italic">{user.bio ? user.bio : "No bio yet..."}</Typography>
+                            <Typography variant="h3" marginBottom="0.8rem" sx={{fontWeight: 700}}>
+                                {user.username}
+                            </Typography>
+                            <Typography variant="h4">
+                                {`${user.firstName} ${user.lastName}`}
+                            </Typography>
+                            <Typography fontStyle="italic">
+                                {user.bio ? user.bio : "No bio yet..."}
+                            </Typography>
                             <FlexBetween marginTop="1rem" color="gray" gap={3}>
                                 <Typography
                                     sx={{"&:hover":{cursor:"pointer"}}}
@@ -127,12 +184,16 @@ const Profile = () => {
                             </FlexBetween>
                         </Box>
                         <Box>
-                            <UserImage size="120"/>
+                            <UserImage
+                                image={user.profilePic ? user.profilePic : "default.jpg"}
+                                size="120"
+                            />
                         </Box>
                     </FlexBetween>
                     {loggedInUser._id === user._id ? (
                         <Box marginTop="1rem" display="flex" justifyContent="center">
                             <Button
+                                onClick={handleOpenEdit}
                                 sx={{width:"100%", border:"2px solid gray"}}
                             >
                                 Edit profile
@@ -143,7 +204,7 @@ const Profile = () => {
                             <Button
                                 variant="contained"
                                 sx={{width:"100%", border:"2px solid gray", color:"white"}}
-                                onClick={handleFollow}
+                                onClick={() => handleFollow()}
                             >
                                 {user.followers.includes(loggedInUser._id) ? "Unfollow" : "Follow"}
                             </Button>
@@ -151,7 +212,7 @@ const Profile = () => {
                                 <Button
                                     variant="contained"
                                     sx={{width:"100%", border:"2px solid gray", color:"white"}}
-                                    onClick={handleRemoveFollower}
+                                    onClick={() => handleRemoveFollower()}
                                 >
                                     Remove Follower
                                 </Button>
@@ -162,6 +223,13 @@ const Profile = () => {
             </Box>
             <PostsWidget userId={user._id} isProfile />
             <UserListModal user={user} setUser={setUser} open={open} handleClose={handleClose} type={type} userId={user._id} />
+            <EditProfileModal 
+                openEdit={openEdit} 
+                handleCloseEdit={handleCloseEdit} 
+                editProfile={editProfile}
+                user={user}
+            />
+            <ErrorModal error={error} openError={openError} handleCloseError={handleCloseError}/>
         </Box>
     );
 }

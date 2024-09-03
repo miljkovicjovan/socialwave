@@ -8,7 +8,7 @@ const UserImage = ({ image = "default.jpg", size = "60px", onClick}) => {
         width={size}
         height={size}
         alt="user profile"
-        src={`http://localhost:3001/assets/${image}`}
+        src={`http://localhost:3001/uploads/${image}`}
         onClick={onClick}
       />
     </Box>

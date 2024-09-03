@@ -148,3 +148,34 @@ export const removeFollower = async (req, res) => {
         res.status(404).json({ message: err.message });
     }
 }
+
+// Edit profile functionality
+export const editProfile = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { username, firstName, lastName, profilePic, bio } = req.body;
+
+        const user = await User.findById(id);
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        const savedFilename = req.savedFilename;
+
+        // Update the user's profile with the new data
+        if (username) user.username = username;
+        if (firstName) user.firstName = firstName;
+        if (lastName) user.lastName = lastName;
+        if (profilePic) user.profilePic = savedFilename;
+        if (bio) user.bio = bio;
+
+        // Save the updated user document
+        await user.save();
+
+        // Respond with the updated user data
+        res.status(200).json({ message: "Profile updated successfully", user });
+
+    } catch (err) {
+        res.status(404).json({ message: err.message });
+    }
+}

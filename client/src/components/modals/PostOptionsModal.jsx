@@ -1,7 +1,8 @@
-import {Box, IconButton, Modal, Button} from "@mui/material";
-import CloseIcon from '@mui/icons-material/Close';
 import { useSelector, useDispatch } from "react-redux";
 import { deletePost } from "state";
+
+import {Box, IconButton, Modal, Button} from "@mui/material";
+import CloseIcon from '@mui/icons-material/Close';
 
 const PostOptionsModal = ({
     postId,
@@ -64,7 +65,15 @@ const PostOptionsModal = ({
                 >
                     <CloseIcon />
                 </IconButton>
-                <Box sx={{ mt: 4, display: 'flex', justifyContent: 'space-between', flexDirection: 'column'}} gap="1rem">
+                <Box 
+                    sx={{ 
+                        mt: 4, 
+                        display: 'flex', 
+                        justifyContent: 'space-between', 
+                        flexDirection: 'column'
+                        }} 
+                    gap="1rem"
+                >
                     <Button 
                         color="primary" 
                         sx={{width:"100%", border:"2px solid gray"}}

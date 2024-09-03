@@ -67,5 +67,4 @@ const CommentModal = ({ open, handleClose, createComment }) => {
         </Modal>
     );
 }
- 
 export default CommentModal;

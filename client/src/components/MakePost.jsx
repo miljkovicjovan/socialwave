@@ -9,11 +9,13 @@ import PostModal from './modals/PostModal';
 
 const MakePost = () => {
     const dispatch = useDispatch();
-    const [open, setOpen] = useState(false);
 
+    // open modal for post
+    const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
+    // user and token from redux store
     const user = useSelector((state) => state.user);
     const token = useSelector((state) => state.token);
 
