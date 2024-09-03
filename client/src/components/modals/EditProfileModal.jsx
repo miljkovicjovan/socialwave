@@ -12,6 +12,19 @@ const EditProfileModal = ({ user, openEdit, handleCloseEdit, editProfile}) => {
     const [bio, setBio] = useState(user.bio);
     const [image, setImage] = useState(null);
 
+    // Separate error and helper text states for each field
+    const [usernameError, setUsernameError] = useState(false);
+    const [usernameHelperText, setUsernameHelperText] = useState('');
+    const [firstNameError, setFirstNameError] = useState(false);
+    const [firstNameHelperText, setFirstNameHelperText] = useState('');
+    const [lastNameError, setLastNameError] = useState(false);
+    const [lastNameHelperText, setLastNameHelperText] = useState('');
+    const [bioError, setBioError] = useState(false);
+    const [bioHelperText, setBioHelperText] = useState('');
+
+    // Derived state to disable submit button if any errors exist
+    const isSubmitDisabled = usernameError || firstNameError || lastNameError || bioError;
+
     const onDrop = (acceptedFiles) => {
         // Only allow one image, replace any existing image
         if (acceptedFiles.length > 0) {
@@ -52,8 +65,50 @@ const EditProfileModal = ({ user, openEdit, handleCloseEdit, editProfile}) => {
         setImage(null)
         setBio(user.bio);
 
+        // reset errors and helper texts
+        setUsernameError(false);
+        setUsernameHelperText('');
+        setFirstNameError(false);
+        setFirstNameHelperText('');
+        setLastNameError(false);
+        setLastNameHelperText('');
+        setBioError(false);
+        setBioHelperText('');
+
         handleCloseEdit();
     }
+
+    const handleChange = (event, type, min, max) => {
+        const value = event.target.value;
+        let error = false;
+        let helperText = '';
+
+        if (value.length < min) {
+            error = true;
+            helperText = `Minimum length is ${min} characters`;
+        } else if (value.length > max) {
+            error = true;
+            helperText = `Maximum length is ${max} characters`;
+        }
+
+        if (type === "username") {
+            setUsername(value);
+            setUsernameError(error);
+            setUsernameHelperText(helperText);
+        } else if (type === "first") {
+            setFirstName(value);
+            setFirstNameError(error);
+            setFirstNameHelperText(helperText);
+        } else if (type === "last") {
+            setLastName(value);
+            setLastNameError(error);
+            setLastNameHelperText(helperText);
+        } else if (type === "bio") {
+            setBio(value);
+            setBioError(error);
+            setBioHelperText(helperText);
+        }
+    };
     
     useEffect(() => {
         if (openEdit) {
@@ -104,21 +159,27 @@ const EditProfileModal = ({ user, openEdit, handleCloseEdit, editProfile}) => {
                             variant="outlined"
                             label="Username:"
                             value={username}
-                            onChange={(e) => setUsername(e.target.value)}
+                            onChange={(e) => handleChange(e, "username", 4, 15)}
                             sx={{paddingRight: "5rem"}}
+                            error={usernameError}
+                            helperText={usernameHelperText}
                         />
                         <TextField
                             variant="outlined"
                             label="First name:"
                             value={firstName}
-                            onChange={(e) => setFirstName(e.target.value)}
+                            onChange={(e) => handleChange(e, "first", 2, 50)}
                             sx={{paddingRight: "1.5rem"}}
+                            error={firstNameError}
+                            helperText={firstNameHelperText}
                         />
                         <TextField
                             variant="outlined"
                             label="Last name:"
                             value={lastName}
-                            onChange={(e) => setLastName(e.target.value)}
+                            onChange={(e) => handleChange(e, "last", 2, 50)}
+                            error={lastNameError}
+                            helperText={lastNameHelperText}
                         />
                     </Box>
                     <Box
@@ -150,9 +211,11 @@ const EditProfileModal = ({ user, openEdit, handleCloseEdit, editProfile}) => {
                         variant="outlined"
                         label="Bio:"
                         value={bio}
-                        onChange={(e) => setBio(e.target.value)}
+                        onChange={(e) => handleChange(e, "bio", 2, 50)}
                         fullWidth
                         multiline
+                        error={bioError}
+                        helperText={bioHelperText}
                     />
                 </Box>
                 <Button
@@ -160,6 +223,7 @@ const EditProfileModal = ({ user, openEdit, handleCloseEdit, editProfile}) => {
                     color="primary"
                     onClick={handleSubmit}
                     sx={{ mt: 2 }}
+                    disabled={isSubmitDisabled}
                 >
                     Submit changes
                 </Button>

@@ -127,7 +127,7 @@ const Profile = () => {
             } else {
                 const errorData = await response.json();
                 console.error('Failed to edit profile:', errorData.message);
-                if(errorData.message.includes("duplicate")) {
+                if (errorData.message.includes("duplicate")) {
                     handleOpenError("The username you selected is already in use.");
                 }
             }

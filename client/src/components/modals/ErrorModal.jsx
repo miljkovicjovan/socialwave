@@ -6,11 +6,7 @@ const ErrorModal = ({ error, openError, handleCloseError }) => {
         <Modal
             open={openError}
             onClose={handleCloseError}
-            sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-            }}
+            sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
         >
             <Box
                 sx={{
@@ -24,11 +20,7 @@ const ErrorModal = ({ error, openError, handleCloseError }) => {
             >
                 <IconButton
                     onClick={handleCloseError}
-                    sx={{
-                        position: 'absolute',
-                        top: 10,
-                        right: 10,
-                    }}
+                    sx={{ position: 'absolute', top: 10, right: 10 }}
                 >
                     <CloseIcon />
                 </IconButton>
