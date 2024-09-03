@@ -1,5 +1,8 @@
 import { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { setMode, setLogout } from "state";
+
 import { 
     Box,
     IconButton,
@@ -15,73 +18,61 @@ import { LightMode, DarkMode, Menu, Close, Waves,
     NotificationsNone, Notifications,
     HomeOutlined, Home,
     PersonOutlineOutlined, Person } from "@mui/icons-material";
-import { useDispatch, useSelector } from "react-redux";
-import { setMode, setLogout } from "state";
-import { useNavigate } from "react-router-dom";
+
 import FlexBetween from "components/FlexBetween";
 
 const Nav = ({ setUser }) => {
-    const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
-    const location = useLocation();
-    const user = useSelector((state) => state.user);
+    // theme/style settings
+    const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);  
     const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
-
-    const [icon, setIcon] = useState();
-  
     const theme = useTheme();
     const neutralLight = theme.palette.neutral.light;
     const dark = theme.palette.neutral.dark;
     const background = theme.palette.background.default;
 
+    // redux / state / location
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const location = useLocation();
+    const user = useSelector((state) => state.user);
+
+    // custom state for icon change based on url
+    const [icon, setIcon] = useState();
+
     const handleProfileNavigation = () => {
         navigate(`/profile/${user.username}`);
-        // Check if the current path matches /profile/something
+        // Check if the current path matches /profile/username
         if (location.pathname.startsWith('/profile/')) {
             setUser(user);
         }
     };
 
     useEffect(() => {
-        if (location.pathname.includes("profile")) {
+        // if on active users profile page
+        if (location.pathname.includes("profile/"+user.username)) {
             setIcon("profile");
         } else if (location.pathname.includes("home") || location.pathname === "/") {
             setIcon("home");
         } else if (location.pathname.includes("notifications")) {
             setIcon("notifications");
         }
-    }, [location.pathname]);
+    }, [location.pathname]); // eslint-disable-line react-hooks/exhaustive-deps
 
     return (
         <FlexBetween 
             padding="1rem 6%"
-            sx={{
-                position: "sticky",
-                top: 0,
-                zIndex: 1000,
-                backgroundColor: background
-            }}
+            sx={{ position: "sticky", top: 0, zIndex: 1000, backgroundColor: background }}
         >
             <Typography 
                 display="flex"
                 alignItems="center"
                 onClick={() => navigate("/home")}
-                sx={{
-                    "&:hover": {
-                        cursor: "pointer",
-                    },
-                }}
+                sx={{"&:hover": { cursor: "pointer" }}}
             >
-                <IconButton
-                    color="white"
-                >
-                    <Waves/>
-                </IconButton>
+                <IconButton color="white"><Waves/></IconButton>
                 SocialWave
             </Typography>
-
-            {/* DESKTOP NAV */}
+            {/* Desktop view NAV */}
             {isNonMobileScreens ? (
                 <FlexBetween gap="2rem">
                     <FlexBetween gap="1rem">
@@ -113,10 +104,7 @@ const Nav = ({ setUser }) => {
                             }}
                             input={<InputBase />}
                         >
-                            <MenuItem 
-                                value={user.username}
-                                onClick={handleProfileNavigation}
-                            >
+                            <MenuItem value={user.username} onClick={handleProfileNavigation}>
                                 <Typography>{user.username}</Typography>
                             </MenuItem>
                             <MenuItem onClick={() => dispatch(setLogout())}>Log Out</MenuItem>
@@ -135,8 +123,7 @@ const Nav = ({ setUser }) => {
                     <Menu />
                 </IconButton>
             )}
-
-            {/* MOBILE NAV */}
+            {/* Mobile view NAV */}
             {!isNonMobileScreens && isMobileMenuToggled && (
                 <Box
                     position="fixed"
@@ -148,14 +135,11 @@ const Nav = ({ setUser }) => {
                     minWidth="300px"
                     backgroundColor={background}
                 >
-                    {/* CLOSE ICON */}
                     <Box display="flex" justifyContent="flex-end" p="1rem">
                         <IconButton onClick={() => setIsMobileMenuToggled(!isMobileMenuToggled)}>
                             <Close />
                         </IconButton>
                     </Box>
-
-                    {/* MENU ITEMS */}
                     <FlexBetween
                         display="flex"
                         flexDirection="column"
@@ -183,33 +167,26 @@ const Nav = ({ setUser }) => {
                         </Box>
                         <FormControl variant="standard" value={user.username}>
                             <Select
-                            value={user.username}
-                            sx={{
-                                backgroundColor: neutralLight,
-                                width: "150px",
-                                borderRadius: "0.25rem",
-                                p: "0.25rem 1rem",
-                                "& .MuiSvgIcon-root": {
-                                    pr: "0.25rem",
-                                    width: "3rem",
-                                },
-                                "& .MuiSelect-select:focus": {
+                                value={user.username}
+                                sx={{
                                     backgroundColor: neutralLight,
-                                },
-                            }}
-                            input={<InputBase />}
+                                    width: "150px",
+                                    borderRadius: "0.25rem",
+                                    p: "0.25rem 1rem",
+                                    "& .MuiSvgIcon-root": {
+                                        pr: "0.25rem",
+                                        width: "3rem",
+                                    },
+                                    "& .MuiSelect-select:focus": {
+                                        backgroundColor: neutralLight,
+                                    },
+                                }}
+                                input={<InputBase />}
                             >
-                                <MenuItem 
-                                    value={user.username}
-                                    onClick={handleProfileNavigation}
-                                >
+                                <MenuItem value={user.username} onClick={handleProfileNavigation}>
                                     <Typography>{user.username}</Typography>
                                 </MenuItem>
-                                <MenuItem onClick={() => {
-                                    dispatch(setLogout());
-                                }}>
-                                    Log Out
-                                </MenuItem>
+                                <MenuItem onClick={() => dispatch(setLogout())}>Log Out</MenuItem>
                             </Select>
                         </FormControl>
                         <IconButton onClick={() => dispatch(setMode())} sx={{ fontSize: "25px" }}>
