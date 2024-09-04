@@ -160,10 +160,10 @@ const Profile = () => {
                             <Typography variant="h4">
                                 {`${user.firstName} ${user.lastName}`}
                             </Typography>
-                            <Typography fontStyle="italic">
+                            <Typography mt="0.5rem" fontStyle="italic">
                                 {user.bio ? user.bio : "No bio yet..."}
                             </Typography>
-                            <FlexBetween marginTop="1rem" color="gray" gap={3}>
+                            <Box marginTop="1rem" color="gray" display="flex" gap="1rem">
                                 <Typography
                                     sx={{"&:hover":{cursor:"pointer"}}}
                                     onClick={() => {
@@ -182,7 +182,7 @@ const Profile = () => {
                                 >
                                     {user.following.length} following
                                 </Typography>
-                            </FlexBetween>
+                            </Box>
                         </Box>
                         <Box>
                             <UserImage
