@@ -41,10 +41,6 @@ const Nav = ({ setUser }) => {
 
     const handleProfileNavigation = () => {
         navigate(`/profile/${user.username}`);
-        // Check if the current path matches /profile/username
-        if (location.pathname.startsWith('/profile/')) {
-            setUser(user);
-        }
     };
 
     useEffect(() => {
