@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { setUsername } from "state";
@@ -14,6 +14,9 @@ import EditProfileModal from "components/modals/EditProfileModal";
 import ErrorModal from "components/modals/ErrorModal";
 
 const Profile = () => {
+    // posts widget ref: for refreshing posts when profile edited
+    const postsWidgetRef = useRef(null);
+
     // theme/ui settings
     const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
     const theme = useTheme();
@@ -123,7 +126,8 @@ const Profile = () => {
                 const { username, bio, profilePic, firstName, lastName } = data.user;
                 dispatch(setUsername({ username: username }));
                 setUser((prevUser) => ({ ...prevUser, username, bio, profilePic, firstName, lastName }));
-                navigate(`/profile/${username}`); // Navigate to the new username
+                postsWidgetRef.current.refreshPosts();
+                navigate(`/profile/${username}`);
             } else {
                 const errorData = await response.json();
                 console.error('Failed to edit profile:', errorData.message);
@@ -222,7 +226,7 @@ const Profile = () => {
                     )}
                 </Box>
             </Box>
-            <PostsWidget userId={user._id} isProfile />
+            <PostsWidget userId={user._id} isProfile ref={postsWidgetRef}/>
             <UserListModal
                 user={user}
                 setUser={setUser}

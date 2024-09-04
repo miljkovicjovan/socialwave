@@ -1,11 +1,11 @@
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useEffect, forwardRef, useImperativeHandle } from "react";
+import { useDispatch, useSelector  } from "react-redux";
 import { setPosts } from "state";
 
 import PostWidget from "./PostWidget";
 import { Box, useMediaQuery } from "@mui/material";
 
-const PostsWidget = ({ userId, isProfile = false }) => {
+const PostsWidget = forwardRef(({ userId, isProfile = false }, ref) => {
     const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
     const dispatch = useDispatch();
     const posts = useSelector((state) => state.posts);
@@ -39,6 +39,11 @@ const PostsWidget = ({ userId, isProfile = false }) => {
             getPosts();
         }
     }
+
+    // Expose the refreshPosts function to the parent component
+    useImperativeHandle(ref, () => ({
+        refreshPosts
+    }));
 
     useEffect(() => {
         refreshPosts();
@@ -74,6 +79,6 @@ const PostsWidget = ({ userId, isProfile = false }) => {
             )}
         </Box>
     );
-};
+});
 
 export default PostsWidget;
