@@ -186,7 +186,7 @@ const Profile = () => {
                         </Box>
                         <Box>
                             <UserImage
-                                /* image={user.profilePic ? user.profilePic : "default.jpg"} */
+                                image={user.profilePic ? user.profilePic : "default.jpg"}
                                 size="120"
                             />
                         </Box>
