@@ -1,4 +1,6 @@
 import User from "../models/User.js";
+import Post from "../models/Post.js";
+import Comment from "../models/Comment.js";
 
 /* ---- READ ---- */
 // Get a user
@@ -162,15 +164,46 @@ export const editProfile = async (req, res) => {
 
         const savedFilename = req.savedFilename;
 
+        // Track whether username or profilePic are updated
+        let usernameChanged = false;
+        let profilePicChanged = false;
+
         // Update the user's profile with the new data
-        if (username) user.username = username;
+        if (username) {
+            user.username = username;
+            usernameChanged = true;
+        }
         if (firstName) user.firstName = firstName;
         if (lastName) user.lastName = lastName;
-        if (profilePic) user.profilePic = savedFilename;
+        if (profilePic) {
+            user.profilePic = savedFilename;
+            profilePicChanged = true;
+        }
         if (bio) user.bio = bio;
 
         // Save the updated user document
         await user.save();
+
+        if (usernameChanged || profilePicChanged) {
+            const updateFields = {};
+            if (usernameChanged) updateFields["comments.$[comment].username"] = username;
+            if (profilePicChanged) updateFields["comments.$[comment].profilePic"] = savedFilename;
+
+            // Update posts
+            await Post.updateMany(
+                { userId: id },
+                { $set: { username, profilePic: savedFilename } }
+            );
+
+            // Update embedded comments
+            await Post.updateMany(
+                { "comments.userId": id },
+                { $set: updateFields },
+                {
+                    arrayFilters: [{ "comment.userId": id }],
+                }
+            );
+        }
 
         // Respond with the updated user data
         res.status(200).json({ message: "Profile updated successfully", user });
