@@ -140,7 +140,7 @@ const Profile = () => {
 
     useEffect(() => {
         getUser();
-    }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [username]); // eslint-disable-line react-hooks/exhaustive-deps
 
     if (!user) return null;
 
