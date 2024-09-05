@@ -1,6 +1,6 @@
 import User from "../models/User.js";
 import Post from "../models/Post.js";
-import Comment from "../models/Comment.js";
+import Notification from "../models/Notification.js";
 
 /* ---- READ ---- */
 // Get a user
@@ -202,6 +202,12 @@ export const editProfile = async (req, res) => {
                 {
                     arrayFilters: [{ "comment.userId": id }],
                 }
+            );
+
+            // Update notifications
+            await Notification.updateMany(
+                { referenceId: id },
+                { $set: { referenceUsername: username, referenceProfilePic: savedFilename } }
             );
         }
 

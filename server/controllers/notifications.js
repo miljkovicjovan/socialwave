@@ -7,13 +7,17 @@ export const createNotification = async (req, res) => {
     try {
         const { userId, type, referenceId, referenceUsername, referenceProfilePic } = req.body;
 
+        if (userId === referenceId) {
+            return res.status(404).json({ message: "Both users are the same" });
+        }
+
         const user = await User.findById(userId);
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
 
-         // Check if a notification of the same type already exists
-         const existingNotification = await Notification.findOne({
+        // Check if a notification of the same type already exists
+        const existingNotification = await Notification.findOne({
             userId,
             type,
             referenceId
