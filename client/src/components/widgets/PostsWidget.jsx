@@ -49,9 +49,12 @@ const PostsWidget = forwardRef(({ userId, isProfile = false }, ref) => {
         refreshPosts();
     }, [userId]); // eslint-disable-line react-hooks/exhaustive-deps
 
+    // Sort posts from newest to oldest before rendering
+    const sortedPosts = [...posts].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
     return (
         <Box width={isNonMobileScreens ? "40%" : "75%"} sx={{margin:"1rem auto"}}>
-            {posts.map(
+            {sortedPosts.map(
                 ({
                     _id,
                     userId,
