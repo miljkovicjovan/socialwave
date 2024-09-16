@@ -50,6 +50,7 @@ const PostWidget = ({
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+    const [commentsShow, setCommentsShow] = useState(true);
 
     const createComment = async (comment) => {
         try {
@@ -159,8 +160,15 @@ const PostWidget = ({
             {commentCount > 0 && (
                 <Box>
                     <hr/>
-                    <Typography textAlign="center" pb="0.5rem">Comments ({commentCount})</Typography>
-                    <CommentsBox comments={comments}/>
+                    <Typography 
+                        textAlign="center"
+                        pb="0.5rem"
+                        sx={{"&:hover": {cursor:"pointer", fontWeight:"600"}}}
+                        onClick={() => setCommentsShow(!commentsShow)}
+                    >
+                        Comments ({commentCount})
+                    </Typography>
+                    {commentsShow && <CommentsBox comments={comments}/>}
                 </Box>
                 )}
             <CommentModal open={open} handleClose={handleClose} createComment={createComment} />

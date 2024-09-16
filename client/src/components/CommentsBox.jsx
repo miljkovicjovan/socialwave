@@ -7,7 +7,7 @@ import UserImage from "./UserImage";
 const CommentsBox = ({ comments }) => {
     return ( 
         <Box>
-             {comments.map(
+            {comments.map(
                 ({
                     _id,
                     username,
